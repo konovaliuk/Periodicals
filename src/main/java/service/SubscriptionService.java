@@ -2,10 +2,13 @@ package service;
 
 import persistence.dao.ISubscription;
 import persistence.dao.daoFactory.DAOFactory;
+import persistence.entities.Payment;
 import persistence.entities.Periodical;
 import persistence.entities.Subscription;
 import persistence.entities.User;
+import service.transactionManager.SubscribeManager;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
@@ -14,12 +17,13 @@ import java.util.ArrayList;
  */
 public class SubscriptionService {
     private static ISubscription iSubscription = DAOFactory.getMySqlDAOFactory().getSubscriptionDAO();
+    private static SubscribeManager subscribeManager = new SubscribeManager();
 
-    public static boolean subscribe(User user, Periodical periodical) {
-        Subscription subscription = new Subscription(user, periodical, null, new Timestamp(System.currentTimeMillis()));
-        if (iSubscription.insertSubscription(subscription))
-            return true;
-        return false;
+    public static boolean subscribe(User user, Periodical periodical, BigDecimal totalAmount) {
+        user.getAccount().setAmount(user.getAccount().getAmount().subtract(totalAmount));
+        Payment payment = new Payment(new Timestamp(System.currentTimeMillis()), totalAmount);
+        Subscription subscription = new Subscription(user, periodical, payment, new Timestamp(System.currentTimeMillis()));
+        return subscribeManager.subscribe(subscription);
     }
 
     public static ArrayList<Periodical> getUserPeriodicals(User user) {

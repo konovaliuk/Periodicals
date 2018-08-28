@@ -14,6 +14,8 @@ public abstract class DAOFactory {
         return new MySqlDAOFactory();
     }
 
+    public abstract IAccount getAccountDAO();
+
     public abstract IPayment getPaymentDAO();
 
     public abstract IPeriodical getPeriodicalDAO();

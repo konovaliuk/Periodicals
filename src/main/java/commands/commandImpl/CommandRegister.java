@@ -39,7 +39,7 @@ public class CommandRegister implements ICommand {
         }
 
         UserRole userRole = UserService.getUserRole("reader");
-        User user = new User(userRole, name, login, password);
+        User user = new User(userRole, null, name, login, password);
         if (!UserService.register(user)) {
             request.setAttribute("error", Info.getInstance().getProperty(Info.LOGIN_ERROR));
             page = Config.getInstance().getProperty(Config.REGISTRATION);

@@ -23,9 +23,9 @@ public class PeriodicalPeriodDAO extends AbstractDAO implements IPeriodicalPerio
 
     private final String SELECT_ALL_FROM_PERIODICAL_PERIOD = "SELECT * FROM periodical_period ";
 
-    private final String INSERT_PERIOD = "INSERT INTO periodical_period (period) VALUES (?)";
+    private final String INSERT_PERIOD = "INSERT INTO periodical_period (period,term) VALUES (?,?)";
 
-    private final String UPDATE_PERIOD = "UPDATE periodical_period SET periodical_period.period = ? " +
+    private final String UPDATE_PERIOD = "UPDATE periodical_period SET periodical_period.period = ?, periodical_period.term = ?" +
             "WHERE periodical_period.id = ?";
 
     public static PeriodicalPeriodDAO getInstance() {
@@ -44,7 +44,8 @@ public class PeriodicalPeriodDAO extends AbstractDAO implements IPeriodicalPerio
             period = findById(SELECT_ALL_FROM_PERIODICAL_PERIOD + "WHERE periodical_period.id= ?", id,
                     set -> set != null ? new PeriodicalPeriod(
                             set.getInt("id"),
-                            set.getString("period")) : null);
+                            set.getString("period"),
+                            set.getInt("term")) : null);
         } catch (SQLException e) {
             logger.error("Failed to find period by id", e);
         }
@@ -61,7 +62,8 @@ public class PeriodicalPeriodDAO extends AbstractDAO implements IPeriodicalPerio
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     periodicalPeriod = new PeriodicalPeriod(resultSet.getInt("id"),
-                            resultSet.getString("period"));
+                            resultSet.getString("period"),
+                            resultSet.getInt("term"));
                 }
             }
         } catch (SQLException e) {
@@ -79,7 +81,8 @@ public class PeriodicalPeriodDAO extends AbstractDAO implements IPeriodicalPerio
             try (ResultSet resultSet = statement.executeQuery(SELECT_ALL_FROM_PERIODICAL_PERIOD)) {
                 while (resultSet.next()) {
                     PeriodicalPeriod period = new PeriodicalPeriod(resultSet.getInt("id"),
-                            resultSet.getString("period"));
+                            resultSet.getString("period"),
+                            resultSet.getInt("term"));
                     periods.add(period);
                 }
             }
@@ -94,6 +97,7 @@ public class PeriodicalPeriodDAO extends AbstractDAO implements IPeriodicalPerio
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_PERIOD, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, period.getPeriod());
+            statement.setInt(2, period.getTerm());
             if (statement.executeUpdate() != 0) {
                 period.setId(getGeneratedKey(statement));
                 return true;
@@ -110,6 +114,7 @@ public class PeriodicalPeriodDAO extends AbstractDAO implements IPeriodicalPerio
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_PERIOD)) {
             statement.setString(1, period.getPeriod());
+            statement.setInt(2, period.getTerm());
             if (statement.executeUpdate() != 0) {
                 return true;
             }

@@ -11,15 +11,20 @@ import java.util.Objects;
 public class Payment implements Serializable {
     private int id;
     private Timestamp date;
-    private BigDecimal price;
+    private BigDecimal amount;
 
     public Payment() {
     }
 
-    public Payment(int id, Timestamp date, BigDecimal price) {
+    public Payment(int id, Timestamp date, BigDecimal amount) {
         this.id = id;
         this.date = date;
-        this.price = price;
+        this.amount = amount;
+    }
+
+    public Payment(Timestamp date, BigDecimal amount) {
+        this.date = date;
+        this.amount = amount;
     }
 
     public int getId() {
@@ -30,20 +35,12 @@ public class Payment implements Serializable {
         return date;
     }
 
-    public BigDecimal getPrice() {
-        return price;
+    public BigDecimal getAmount() {
+        return amount;
     }
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public void setDate(Timestamp date) {
-        this.date = date;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
     }
 
     @Override
@@ -53,12 +50,12 @@ public class Payment implements Serializable {
         Payment payment = (Payment) o;
         return id == payment.id &&
                 Objects.equals(date, payment.date) &&
-                Objects.equals(price, payment.price);
+                Objects.equals(amount, payment.amount);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, date, price);
+        return Objects.hash(id, date, amount);
     }
 
     @Override
@@ -66,7 +63,7 @@ public class Payment implements Serializable {
         return "Payment{" +
                 "id=" + id +
                 ", date=" + date +
-                ", price=" + price +
+                ", amount=" + amount +
                 '}';
     }
 }

@@ -16,6 +16,11 @@ import java.sql.SQLException;
 public class MySqlDAOFactory extends DAOFactory {
 
     @Override
+    public IAccount getAccountDAO() {
+        return AccountDAO.getInstance();
+    }
+
+    @Override
     public IPayment getPaymentDAO() {
         return PaymentDAO.getInstance();
     }

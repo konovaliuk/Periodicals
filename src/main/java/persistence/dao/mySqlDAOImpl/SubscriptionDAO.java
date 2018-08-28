@@ -23,11 +23,11 @@ public class SubscriptionDAO extends AbstractDAO implements ISubscription {
 
     private final String SELECT_ALL_FROM_SUBSCRIPTION = "SELECT * FROM subscription ";
 
-    private final String INSERT_SUBSCRIPTION = "INSERT INTO subscription (user_id, periodical_id,  expiration_date) " +
-            "VALUES (?,?,?)";
+    private final String INSERT_SUBSCRIPTION = "INSERT INTO subscription (user_id, periodical_id, payment_id, expiration_date) " +
+            "VALUES (?,?,?,?)";
 
-    private final String UPDATE_SUBSCRIPTION = "UPDATE subscription SET subscription.user_id = ?, subscription.periodical_id = ?," +
-            "subscription.expiration_date = ? " +
+    private final String UPDATE_SUBSCRIPTION = "UPDATE subscription SET subscription.user_id = ?, subscription.periodical_id = ?, " +
+            "subscription.payment_id = ?, subscription.expiration_date = ? " +
             "WHERE subscription.id = ?";
 
     private SubscriptionDAO() {
@@ -50,7 +50,7 @@ public class SubscriptionDAO extends AbstractDAO implements ISubscription {
                             set.getInt("id"),
                             daoFactory.getUserDAO().findUserById(set.getInt("user_id")),
                             daoFactory.getPeriodicalDAO().findPeriodicalById(set.getInt("periodical_id")),
-                            daoFactory.getPaymentDAO().findPaymentById(set.getInt("id")),
+                            daoFactory.getPaymentDAO().findPaymentById(set.getInt("payment_id")),
                             set.getTimestamp("expiration_date")) : null);
         } catch (SQLException e) {
             logger.error("Failed to find subscription by id", e);
@@ -63,7 +63,8 @@ public class SubscriptionDAO extends AbstractDAO implements ISubscription {
         ArrayList<Subscription> subscriptions = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
-            try (ResultSet resultSet = statement.executeQuery(SELECT_ALL_FROM_SUBSCRIPTION + "WHERE subscription.user_id = " + id)) {
+            try (ResultSet resultSet = statement.executeQuery(SELECT_ALL_FROM_SUBSCRIPTION +
+                    "WHERE subscription.user_id = " + id)) {
                 while (resultSet.next()) {
                     Subscription subscription = new Subscription(resultSet.getInt("id"),
                             daoFactory.getUserDAO().findUserById(resultSet.getInt("user_id")),
@@ -102,21 +103,15 @@ public class SubscriptionDAO extends AbstractDAO implements ISubscription {
     }
 
     @Override
-    public boolean insertSubscription(Subscription subscription) {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(INSERT_SUBSCRIPTION, Statement.RETURN_GENERATED_KEYS)) {
-            statement.setInt(1, subscription.getUser().getId());
-            statement.setInt(2, subscription.getPeriodical().getId());
-            /*statement.setInt(3, subscription.getPayment().getId());*/
-            statement.setTimestamp(3, subscription.getExpiration_date());
-
-            if (statement.executeUpdate() != 0) {
-                subscription.setId(getGeneratedKey(statement));
-                return true;
-            }
-
-        } catch (SQLException e) {
-            logger.error("Failed to insert subscription", e);
+    public boolean insertSubscription(Subscription subscription, Connection connection) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(INSERT_SUBSCRIPTION, Statement.RETURN_GENERATED_KEYS);
+        statement.setInt(1, subscription.getUser().getId());
+        statement.setInt(2, subscription.getPeriodical().getId());
+        statement.setInt(3, subscription.getPayment().getId());
+        statement.setTimestamp(4, subscription.getExpiration_date());
+        if (statement.executeUpdate() != 0) {
+            subscription.setId(getGeneratedKey(statement));
+            return true;
         }
         return false;
     }
@@ -127,7 +122,8 @@ public class SubscriptionDAO extends AbstractDAO implements ISubscription {
              PreparedStatement statement = connection.prepareStatement(UPDATE_SUBSCRIPTION)) {
             statement.setInt(1, subscription.getUser().getId());
             statement.setInt(2, subscription.getPeriodical().getId());
-            statement.setTimestamp(3, subscription.getExpiration_date());
+            statement.setInt(3, subscription.getPayment().getId());
+            statement.setTimestamp(4, subscription.getExpiration_date());
             if (statement.executeUpdate() != 0) {
                 return true;
             }

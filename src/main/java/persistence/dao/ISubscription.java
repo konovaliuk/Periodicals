@@ -2,6 +2,8 @@ package persistence.dao;
 
 import persistence.entities.Subscription;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -30,9 +32,10 @@ public interface ISubscription {
      * Insert new subscription
      *
      * @param subscription - subscription to be inserted to the database
+     * @param connection - connection with setAutoCommit(false)
      * @return - {@code true} if new subscription id added, {@code false} if no records is inserted
      */
-    boolean insertSubscription(Subscription subscription);
+    boolean insertSubscription(Subscription subscription, Connection connection) throws SQLException;
 
     /**
      * Update subscription info

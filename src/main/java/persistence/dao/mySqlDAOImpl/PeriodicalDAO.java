@@ -20,7 +20,7 @@ public class PeriodicalDAO extends AbstractDAO implements IPeriodical {
     private static PeriodicalDAO periodicalDAO;
 
     private final String SELECT_ALL_FROM_PERIODICAL = "SELECT periodical.id, periodical.title, periodical.periodical_type, " +
-            "            periodical_type.type, periodical.periodical_period, periodical_period.period, " +
+            "            periodical_type.type, periodical.periodical_period, periodical_period.period, periodical_period.term, " +
             "            periodical.category, periodical.price, periodical.description FROM periodical INNER JOIN periodical_type " +
             "            ON(periodical.periodical_type = periodical_type.id) " +
             "            INNER JOIN periodical_period ON (periodical.periodical_period = periodical_period.id) ";
@@ -53,7 +53,7 @@ public class PeriodicalDAO extends AbstractDAO implements IPeriodical {
                             set.getInt("id"),
                             set.getString("title"),
                             new PeriodicalType(set.getInt("periodical_type"), set.getString("type")),
-                            new PeriodicalPeriod(set.getInt("periodical_period"), set.getString("period")),
+                            new PeriodicalPeriod(set.getInt("periodical_period"), set.getString("period"),set.getInt("term")),
                             set.getString("category"),
                             set.getBigDecimal("price"),
                             set.getString("description")) : null);
@@ -73,8 +73,7 @@ public class PeriodicalDAO extends AbstractDAO implements IPeriodical {
                     Periodical periodical = new Periodical(resultSet.getInt("id"),
                             resultSet.getString("title"),
                             new PeriodicalType(resultSet.getInt("periodical_type"), resultSet.getString("type")),
-                            new PeriodicalPeriod(resultSet.getInt("periodical_period"), resultSet.getString("period")),
-                            resultSet.getString("category"),
+                            new PeriodicalPeriod(resultSet.getInt("periodical_period"), resultSet.getString("period"),resultSet.getInt("term")),                            resultSet.getString("category"),
                             resultSet.getBigDecimal("price"),
                             resultSet.getString("description"));
                     periodicals.add(periodical);

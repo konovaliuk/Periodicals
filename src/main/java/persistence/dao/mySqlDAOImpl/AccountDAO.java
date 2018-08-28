@@ -23,7 +23,7 @@ public class AccountDAO extends AbstractDAO implements IAccount {
             "VALUES (?)";
 
     private final String UPDATE_ACCOUNT = "UPDATE account SET account.amount = ?" +
-            "WHERE account.id = ?";
+            " WHERE account.id = ?";
 
     private AccountDAO() {
     }
@@ -70,10 +70,10 @@ public class AccountDAO extends AbstractDAO implements IAccount {
     @Override
     public boolean insertAccount(Account account) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(INSERT_ACCOUNT, Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement statement = connection.prepareStatement(INSERT_ACCOUNT)) {
             statement.setBigDecimal(1, account.getAmount());
             if (statement.executeUpdate() != 0) {
-                account.setId(getGeneratedKey(statement));
+                /*  account.setId(getGeneratedKey(statement));*/
                 return true;
             }
         } catch (SQLException e) {
@@ -83,15 +83,12 @@ public class AccountDAO extends AbstractDAO implements IAccount {
     }
 
     @Override
-    public boolean updateAccount(Account account) {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(UPDATE_ACCOUNT)) {
-            statement.setBigDecimal(2, account.getAmount());
-            if (statement.executeUpdate() != 0) {
-                return true;
-            }
-        } catch (SQLException e) {
-            logger.error("Failed to update account", e);
+    public boolean updateAccount(Account account, Connection connection) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(UPDATE_ACCOUNT);
+        statement.setBigDecimal(1, account.getAmount());
+        statement.setInt(2, account.getId());
+        if (statement.executeUpdate() != 0) {
+            return true;
         }
         return false;
     }

@@ -19,10 +19,10 @@ public class PaymentDAO extends AbstractDAO implements IPayment {
 
     private final String SELECT_ALL_FROM_PAYMENT = "SELECT * FROM payment ";
 
-    private final String INSERT_PAYMENT = "INSERT INTO payment (date, price) " +
+    private final String INSERT_PAYMENT = "INSERT INTO payment (date, amount) " +
             "VALUES (?,?)";
 
-    private final String UPDATE_PERIODICAL = "UPDATE payment SET payment.date = ?, payment.price = ?" +
+    private final String UPDATE_PAYMENT = "UPDATE payment SET payment.date = ?, payment.amount = ?" +
             "WHERE payment.id = ?";
 
     private PaymentDAO() {
@@ -43,7 +43,7 @@ public class PaymentDAO extends AbstractDAO implements IPayment {
                     set -> set != null ? new Payment(
                             set.getInt("id"),
                             set.getTimestamp("date"),
-                            set.getBigDecimal("price")) : null);
+                            set.getBigDecimal("amount")) : null);
         } catch (SQLException e) {
             logger.error("Failed to find payment by id", e);
         }
@@ -59,7 +59,7 @@ public class PaymentDAO extends AbstractDAO implements IPayment {
                 while (resultSet.next()) {
                     Payment payment = new Payment(resultSet.getInt("id"),
                             resultSet.getTimestamp("date"),
-                            resultSet.getBigDecimal("price"));
+                            resultSet.getBigDecimal("amount"));
                     payments.add(payment);
                 }
             }
@@ -70,18 +70,13 @@ public class PaymentDAO extends AbstractDAO implements IPayment {
     }
 
     @Override
-    public boolean insertPayment(Payment payment) {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(INSERT_PAYMENT, Statement.RETURN_GENERATED_KEYS)) {
-            statement.setTimestamp(1, payment.getDate());
-            statement.setBigDecimal(2, payment.getPrice());
-            if (statement.executeUpdate() != 0) {
-                payment.setId(getGeneratedKey(statement));
-                return true;
-            }
-
-        } catch (SQLException e) {
-            logger.error("Failed to insert payment", e);
+    public boolean insertPayment(Payment payment, Connection connection) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(INSERT_PAYMENT, Statement.RETURN_GENERATED_KEYS);
+        statement.setTimestamp(1, payment.getDate());
+        statement.setBigDecimal(2, payment.getAmount());
+        if (statement.executeUpdate() != 0) {
+            payment.setId(getGeneratedKey(statement));
+            return true;
         }
         return false;
     }
@@ -89,9 +84,9 @@ public class PaymentDAO extends AbstractDAO implements IPayment {
     @Override
     public boolean updatePayment(Payment payment) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(UPDATE_PERIODICAL)) {
+             PreparedStatement statement = connection.prepareStatement(UPDATE_PAYMENT)) {
             statement.setTimestamp(1, payment.getDate());
-            statement.setBigDecimal(2, payment.getPrice());
+            statement.setBigDecimal(2, payment.getAmount());
             if (statement.executeUpdate() != 0) {
                 return true;
             }

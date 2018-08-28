@@ -2,6 +2,8 @@ package persistence.dao;
 
 import persistence.entities.Account;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -34,10 +36,11 @@ public interface IAccount {
     /**
      * Update account info
      *
-     * @param account - account info to be updated in the database
+     * @param account    - account info to be updated in the database
+     * @param connection - connection with setAutoCommit(false)
      * @return - {@code true} if account info is updated, {@code false} if no records is updated
      */
-    boolean updateAccount(Account account);
+    boolean updateAccount(Account account, Connection connection) throws SQLException;
 
     /**
      * Delete account

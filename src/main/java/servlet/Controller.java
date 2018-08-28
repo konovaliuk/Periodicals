@@ -29,7 +29,7 @@ public class Controller extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String page ;
+        String page;
 
         ICommand command = controllerHelper.getCommand(request);
         page = command.execute(request, response);

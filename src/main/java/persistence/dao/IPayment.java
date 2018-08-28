@@ -2,6 +2,8 @@ package persistence.dao;
 
 import persistence.entities.Payment;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -27,15 +29,16 @@ public interface IPayment {
     /**
      * Insert new payment
      *
-     * @param payment - payment to be inserted to the database
+     * @param payment    - payment to be inserted to the database
+     * @param connection - connection with setAutoCommit(false)
      * @return - {@code true} if new payment id added, {@code false} if no records is inserted
      */
-    boolean insertPayment(Payment payment);
+    boolean insertPayment(Payment payment, Connection connection) throws SQLException;
 
     /**
      * Update payment info
      *
-     * @param payment - payment info to be updated in the database
+     * @param payment    - payment info to be updated in the database
      * @return - {@code true} if payment info is updated, {@code false} if no records is updated
      */
     boolean updatePayment(Payment payment);
