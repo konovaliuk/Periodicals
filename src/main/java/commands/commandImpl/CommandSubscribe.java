@@ -23,7 +23,7 @@ public class CommandSubscribe implements ICommand {
             Periodical periodical = (Periodical) request.getSession().getAttribute("periodical");
            /* String period = request.getParameter("period");*/
             if (SubscriptionService.subscribe(user, periodical)) {
-                return Config.getInstance().getProperty(Config.USER_PERIODICALS);
+                return Config.getInstance().getProperty(Config.GET_USER_PERIODICALS);
             }
         }
         return Config.getInstance().getProperty(Config.HOME);

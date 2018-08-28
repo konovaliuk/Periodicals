@@ -18,37 +18,7 @@
 </head>
 <body>
 
-
 <div class="header">
-    <%-- <a href="/" class="logo"><fmt:message key="periodical_editions"/></a>--%>
-    <%--<div class="header-right">
-        <a class="active" href="/"><fmt:message key="home"/> </a>
-        <c:if test="${empty user}">
-            <a href="login"><fmt:message key="sign_in"/> </a>
-            <a href="register"><fmt:message key="registration"/> </a>
-        </c:if>
-        <c:if test="${not empty user}">
-            <c:choose>
-                <c:when test="${role=='admin'}">
-                    <div class="dropdown">
-                        <button class="dropbtn">Dropdown</button>
-                        <div class="dropdown-content">
-                            <a href="#">Link 1</a>
-                            <a href="#">Link 2</a>
-                            <a href="#">Link 3</a>
-                        </div>
-                    </div>
-                </c:when>
-                <c:otherwise>
-                    <a href="Controller?command=userPeriodicals">My periodicals</a>
-                </c:otherwise>
-            </c:choose>
-            <a href="Controller?command=logout"><fmt:message key="sign_out"/> </a>
-        </c:if>
-
-    </div>
---%>
-
     <div class="navbar">
         <a href="/"><fmt:message key="home"/> </a>
         <c:if test="${empty user}">
@@ -58,10 +28,10 @@
         <c:if test="${not empty user}">
             <c:choose>
                 <c:when test="${role=='admin'}">
-                    <a href="/createPeriodical">Create periodical</a>
+                    <a href="createPeriodical">Create periodical</a>
                 </c:when>
                 <c:otherwise>
-                    <a href="Controller?command=userPeriodicals">My periodicals</a>
+                    <a href="Controller?command=getUserPeriodicals">My periodicals</a>
                 </c:otherwise>
             </c:choose>
             <a href="Controller?command=logout"><fmt:message key="sign_out"/> </a>
@@ -72,5 +42,6 @@
             <a href="Controller?command=locale&locale=ru"><img src="../../css/images/ru.png"></a>
         </div>
     </div>
+</div>
 </body>
 </html>

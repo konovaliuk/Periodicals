@@ -23,14 +23,11 @@ public class SubscriptionDAO extends AbstractDAO implements ISubscription {
 
     private final String SELECT_ALL_FROM_SUBSCRIPTION = "SELECT * FROM subscription ";
 
-    /*private final String INSERT_SUBSCRIPTION = "INSERT INTO subscription (user_id, periodical_id, payment_id, expiration_date) " +
-            "VALUES (?,?,?,?)";*/
-
     private final String INSERT_SUBSCRIPTION = "INSERT INTO subscription (user_id, periodical_id,  expiration_date) " +
             "VALUES (?,?,?)";
 
     private final String UPDATE_SUBSCRIPTION = "UPDATE subscription SET subscription.user_id = ?, subscription.periodical_id = ?," +
-            "subscription.payment_id = ?, subscription.expiration_date = ? " +
+            "subscription.expiration_date = ? " +
             "WHERE subscription.id = ?";
 
     private SubscriptionDAO() {
@@ -46,14 +43,14 @@ public class SubscriptionDAO extends AbstractDAO implements ISubscription {
 
     @Override
     public Subscription findSubscriptionById(int id) {
-        Subscription subscription=null;
+        Subscription subscription = null;
         try {
             subscription = findById(SELECT_ALL_FROM_SUBSCRIPTION + "WHERE subscription.id = ?", id,
                     set -> set != null ? new Subscription(
                             set.getInt("id"),
                             daoFactory.getUserDAO().findUserById(set.getInt("user_id")),
                             daoFactory.getPeriodicalDAO().findPeriodicalById(set.getInt("periodical_id")),
-                            daoFactory.getPaymentDAO().findPaymentById(set.getInt("payment_id")),
+                            daoFactory.getPaymentDAO().findPaymentById(set.getInt("id")),
                             set.getTimestamp("expiration_date")) : null);
         } catch (SQLException e) {
             logger.error("Failed to find subscription by id", e);
@@ -130,8 +127,7 @@ public class SubscriptionDAO extends AbstractDAO implements ISubscription {
              PreparedStatement statement = connection.prepareStatement(UPDATE_SUBSCRIPTION)) {
             statement.setInt(1, subscription.getUser().getId());
             statement.setInt(2, subscription.getPeriodical().getId());
-            statement.setInt(3, subscription.getPayment().getId());
-            statement.setTimestamp(4, subscription.getExpiration_date());
+            statement.setTimestamp(3, subscription.getExpiration_date());
             if (statement.executeUpdate() != 0) {
                 return true;
             }

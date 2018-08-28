@@ -17,11 +17,11 @@
     <fmt:setBundle basename="message"/>
 </head>
 <body>
+
 <c:set var="role" scope="session" value="${role}"/>
 <jsp:include page="header.jsp"/>
+
 <div class="container">
-    <ul>
-        <li>
             <c:set var="item" scope="session" value="${periodical}"/>
             <div class="type"><c:out value="${item.getPeriodicalType().getType()}"/></div>
             <div class="mainHeader">${item.getTitle()}</div>
@@ -58,8 +58,6 @@
                     </form>
                 </c:otherwise>
             </c:choose>
-        </li>
-    </ul>
 </div>
 </body>
 </html>

@@ -27,7 +27,7 @@
     <ul>
         <c:forEach var="item" items="${periodicals}">
             <li>
-                <a href="periodical?command=periodical&id=${item.getId()}">
+                <a href="Controller?command=periodicalInfo&id=${item.getId()}">
                     <div class="type"><c:out value="${item.getPeriodicalType().getType()}"/></div>
                     <div class="mainHeader">${item.getTitle()}</div>
                     <img src="../../css/images/book.jpg" alt="image">

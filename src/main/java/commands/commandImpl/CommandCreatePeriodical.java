@@ -2,7 +2,7 @@ package commands.commandImpl;
 
 import commands.ICommand;
 import manager.Config;
-import manager.Message;
+import manager.Info;
 import service.PeriodicalService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,9 +24,10 @@ public class CommandCreatePeriodical implements ICommand {
         String description = request.getParameter("description");
 
         if (!PeriodicalService.createPeriodical(title, type, period, category, price, description)) {
-
+            request.setAttribute("info", Info.getInstance().getProperty(Info.INCORRECT_DATA_TRY_AGAIN));
+            return Config.getInstance().getProperty(Config.CREATE_PERIODICAL);
         }
-        request.setAttribute("info", Message.getInstance().getProperty(Message.DONE));
+        request.setAttribute("info", Info.getInstance().getProperty(Info.DONE));
         return Config.getInstance().getProperty(Config.CREATE_PERIODICAL);
     }
 }

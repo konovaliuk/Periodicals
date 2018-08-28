@@ -4,7 +4,7 @@ package commands.commandImpl;
 import commands.ICommand;
 import logging.LoggerLoader;
 import manager.Config;
-import manager.Message;
+import manager.Info;
 import persistence.entities.User;
 import service.UserService;
 
@@ -29,7 +29,7 @@ public class CommandLogin implements ICommand {
             logger.info("Login new user " + user.getLogin());
             return Config.getInstance().getProperty(Config.HOME);
         }
-        request.setAttribute("error", Message.getInstance().getProperty(Message.LOGIN_ERROR));
+        request.setAttribute("error", Info.getInstance().getProperty(Info.LOGIN_ERROR));
         return Config.getInstance().getProperty(Config.LOGIN);
 
     }

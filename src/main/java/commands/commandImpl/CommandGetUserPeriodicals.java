@@ -23,6 +23,6 @@ public class CommandGetUserPeriodicals implements ICommand {
         }
         ArrayList<Periodical> periodicals = SubscriptionService.getUserPeriodicals(user);
         request.getSession().setAttribute("userPeriodicals", periodicals);
-        return Config.getInstance().getProperty(Config.USER_PERIODICALS);
+        return Config.getInstance().getProperty(Config.GET_USER_PERIODICALS);
     }
 }

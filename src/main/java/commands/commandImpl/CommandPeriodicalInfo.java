@@ -11,13 +11,13 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Created by Julia on 21.08.2018
  */
-public class CommandPeriodical implements ICommand {
+public class CommandPeriodicalInfo implements ICommand {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         String id = request.getParameter("id");
         request.getSession().setAttribute("periodical", PeriodicalService.getPeriodical(Integer.valueOf(id)));
         User user = (User) request.getSession().getAttribute("user");
-        return Config.getInstance().getProperty(Config.PERIODICAL);
+        return Config.getInstance().getProperty(Config.PERIODICAL_INFO);
     }
 }

@@ -20,9 +20,9 @@ public class ControllerHelper {
         commands.put("missing", new CommandMissing());
         commands.put("locale", new CommandLocale());
         commands.put("logout", new CommandLogout());
-        commands.put("periodical", new CommandPeriodical());
+        commands.put("periodicalInfo", new CommandPeriodicalInfo());
         commands.put("subscribe", new CommandSubscribe());
-        commands.put("userPeriodicals", new CommandGetUserPeriodicals());
+        commands.put("getUserPeriodicals", new CommandGetUserPeriodicals());
         commands.put("createPeriodical", new CommandCreatePeriodical());
     }
 

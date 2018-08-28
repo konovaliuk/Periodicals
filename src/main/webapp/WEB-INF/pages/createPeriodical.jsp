@@ -29,7 +29,7 @@
         </select>
 
         <label><b>Period</b></label>
-        <select name="type">
+        <select name="period">
             <option disabled>Select period</option>
             <option value="once a week">once a week</option>
             <option value="once a month">once a month</option>

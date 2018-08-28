@@ -4,6 +4,7 @@ package persistence.dao.mySqlDAOImpl;
 import logging.LoggerLoader;
 import org.apache.log4j.Logger;
 import persistence.dao.IUser;
+import persistence.entities.Account;
 import persistence.entities.User;
 import persistence.entities.UserRole;
 
@@ -18,9 +19,10 @@ public class UserDAO extends AbstractDAO implements IUser {
 
     private static UserDAO userDAO;
 
-    private final String SELECT_ALL_FROM_USER = "SELECT user.id,user.user_role, user_role.role, user.name, " +
+    private final String SELECT_ALL_FROM_USER = "SELECT user.id,user.user_role, account.amount, user_role.role, user.name, " +
             "user.login, user.password " +
-            "FROM user INNER JOIN user_role ON(user.user_role = user_role.id) ";
+            "FROM user INNER JOIN user_role ON(user.user_role = user_role.id) " +
+            "INNER JOIN account ON (user.id=account.id) ";
 
     private final String INSERT_USER = "INSERT INTO user (user_role,name,login,password) VALUES (?,?,?,?)";
 
@@ -47,6 +49,7 @@ public class UserDAO extends AbstractDAO implements IUser {
                 while (resultSet.next()) {
                     user = new User(resultSet.getInt("id"),
                             new UserRole(resultSet.getInt("user_role"), resultSet.getString("role")),
+                            new Account(resultSet.getInt("id"), resultSet.getBigDecimal("amount")),
                             resultSet.getString("name"),
                             resultSet.getString("login"),
                             resultSet.getString("password"));
@@ -68,6 +71,7 @@ public class UserDAO extends AbstractDAO implements IUser {
                 while (resultSet.next()) {
                     user = new User(resultSet.getInt("id"),
                             new UserRole(resultSet.getInt("user_role"), resultSet.getString("role")),
+                            new Account(resultSet.getInt("id"), resultSet.getBigDecimal("amount")),
                             resultSet.getString("name"),
                             resultSet.getString("login"),
                             resultSet.getString("password"));

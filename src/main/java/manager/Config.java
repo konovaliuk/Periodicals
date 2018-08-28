@@ -13,9 +13,9 @@ public class Config {
     public static final String HOME = "HOME";
     public static final String LOGIN = "LOGIN";
     public static final String REGISTRATION = "REGISTRATION";
-    public static final String PERIODICAL = "PERIODICAL";
+    public static final String PERIODICAL_INFO = "PERIODICAL_INFO";
     public static final String SUBSCRIBE = "SUBSCRIBE";
-    public static final String USER_PERIODICALS = "USER_PERIODICALS";
+    public static final String GET_USER_PERIODICALS = "GET_USER_PERIODICALS";
     public static final String CREATE_PERIODICAL = "CREATE_PERIODICAL";
     public static final String ERROR = "ERROR";
 

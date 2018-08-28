@@ -27,9 +27,10 @@
         <url-pattern>/register</url-pattern>
         <url-pattern>/locale</url-pattern>
         <url-pattern>/logout</url-pattern>
-        <url-pattern>/periodical</url-pattern>
+        <url-pattern>/periodicalInfo</url-pattern>
         <url-pattern>/subscribe</url-pattern>
         <url-pattern>/createPeriodical</url-pattern>
+        <url-pattern>/updatePeriodical</url-pattern>
     </servlet-mapping>
 
     <filter>
