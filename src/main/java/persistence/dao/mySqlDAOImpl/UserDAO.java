@@ -1,8 +1,6 @@
 package persistence.dao.mySqlDAOImpl;
 
 
-import logging.LoggerLoader;
-import org.apache.log4j.Logger;
 import persistence.dao.IUser;
 import persistence.entities.Account;
 import persistence.entities.User;
@@ -14,8 +12,6 @@ import java.sql.*;
  * Created by Julia on 09.08.2018
  */
 public class UserDAO extends AbstractDAO implements IUser {
-
-    private static final Logger logger = LoggerLoader.getLogger(UserDAO.class);
 
     private static UserDAO userDAO;
 
@@ -40,7 +36,7 @@ public class UserDAO extends AbstractDAO implements IUser {
     }
 
     @Override
-    public User findUserById(int id) {
+    public User findUserById(int id) throws SQLException {
         User user = null;
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_ALL_FROM_USER + "WHERE user.id= ?")) {
@@ -55,14 +51,12 @@ public class UserDAO extends AbstractDAO implements IUser {
                             resultSet.getString("password"));
                 }
             }
-        } catch (SQLException e) {
-            logger.error("Failed to find user by id", e);
         }
         return user;
     }
 
     @Override
-    public User findUserByLogin(String login) {
+    public User findUserByLogin(String login) throws SQLException {
         User user = null;
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_ALL_FROM_USER + "WHERE user.login= ?")) {
@@ -77,14 +71,12 @@ public class UserDAO extends AbstractDAO implements IUser {
                             resultSet.getString("password"));
                 }
             }
-        } catch (SQLException e) {
-            logger.error("Failed to find user by login", e);
         }
         return user;
     }
 
     @Override
-    public boolean insertUser(User user) {
+    public boolean insertUser(User user) throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_USER, Statement.RETURN_GENERATED_KEYS)) {
             statement.setInt(1, user.getUserRole().getId());
@@ -95,14 +87,12 @@ public class UserDAO extends AbstractDAO implements IUser {
                 user.setId(getGeneratedKey(statement));
                 return true;
             }
-        } catch (SQLException e) {
-            logger.error("Failed to insert user", e);
         }
         return false;
     }
 
     @Override
-    public boolean updateUser(User user) {
+    public boolean updateUser(User user) throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_USER)) {
             statement.setInt(1, user.getUserRole().getId());
@@ -113,22 +103,15 @@ public class UserDAO extends AbstractDAO implements IUser {
             if (statement.executeUpdate() != 0) {
                 return true;
             }
-        } catch (SQLException e) {
-            logger.error("Failed to update user", e);
         }
         return false;
     }
 
     @Override
-    public boolean deleteUser(User user) {
+    public boolean deleteUser(User user) throws SQLException {
         String query = "DELETE FROM user WHERE user.id = " + user.getId();
-
-        try {
-            if (execute(query) != 0) {
-                return true;
-            }
-        } catch (SQLException e) {
-            logger.error("Failed to delete user", e);
+        if (execute(query) != 0) {
+            return true;
         }
         return false;
     }

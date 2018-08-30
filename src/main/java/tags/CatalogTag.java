@@ -17,7 +17,7 @@ public class CatalogTag extends TagSupport {
     public int doStartTag() throws JspException {
         PeriodicalService periodicalService = new PeriodicalService();
         ArrayList<Periodical> periodicals = periodicalService.getPeriodicals();
-        pageContext.getSession().setAttribute("periodicals", periodicals);
+        pageContext.getRequest().setAttribute("periodicals", periodicals);
 
         return SKIP_BODY;
     }

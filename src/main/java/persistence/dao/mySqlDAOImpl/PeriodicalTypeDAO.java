@@ -14,8 +14,6 @@ import java.sql.*;
  */
 public class PeriodicalTypeDAO extends AbstractDAO implements IPeriodicalType {
 
-    private static final Logger logger = LoggerLoader.getLogger(PeriodicalTypeDAO.class);
-
     private static PeriodicalTypeDAO periodicalTypeDAO;
 
     private final String SELECT_ALL_FROM_PERIODICAL_TYPE = "SELECT * FROM periodical_type ";
@@ -36,22 +34,17 @@ public class PeriodicalTypeDAO extends AbstractDAO implements IPeriodicalType {
 
 
     @Override
-    public PeriodicalType findTypeById(int id) {
-        PeriodicalType type = null;
-
-        try {
-            type = findById(SELECT_ALL_FROM_PERIODICAL_TYPE + "WHERE periodical_type.id= ?", id,
-                    set -> set != null ? new PeriodicalType(
-                            set.getInt("id"),
-                            set.getString("type")) : null);
-        } catch (SQLException e) {
-            logger.error("Failed to find type by id", e);
-        }
+    public PeriodicalType findTypeById(int id) throws SQLException {
+        PeriodicalType type;
+        type = findById(SELECT_ALL_FROM_PERIODICAL_TYPE + "WHERE periodical_type.id= ?", id,
+                set -> set != null ? new PeriodicalType(
+                        set.getInt("id"),
+                        set.getString("type")) : null);
         return type;
     }
 
     @Override
-    public PeriodicalType findTypeByPeriodicalType(String type) {
+    public PeriodicalType findTypeByPeriodicalType(String type) throws SQLException {
         PeriodicalType periodicalType = null;
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_ALL_FROM_PERIODICAL_TYPE + "WHERE periodical_type.type= ?")) {
@@ -62,14 +55,12 @@ public class PeriodicalTypeDAO extends AbstractDAO implements IPeriodicalType {
                             resultSet.getString("type"));
                 }
             }
-        } catch (SQLException e) {
-            logger.error("Failed to find type by periodical_type", e);
         }
         return periodicalType;
     }
 
     @Override
-    public boolean insertType(PeriodicalType type) {
+    public boolean insertType(PeriodicalType type) throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_TYPE, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, type.getType());
@@ -78,36 +69,27 @@ public class PeriodicalTypeDAO extends AbstractDAO implements IPeriodicalType {
                 return true;
             }
 
-        } catch (SQLException e) {
-            logger.error("Failed to insert type ", e);
         }
         return false;
     }
 
     @Override
-    public boolean updateType(PeriodicalType type) {
+    public boolean updateType(PeriodicalType type) throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_TYPE)) {
             statement.setString(1, type.getType());
             if (statement.executeUpdate() != 0) {
                 return true;
             }
-        } catch (SQLException e) {
-            logger.error("Failed to update type ", e);
-
         }
         return false;
     }
 
     @Override
-    public boolean deleteType(PeriodicalType type) {
+    public boolean deleteType(PeriodicalType type) throws SQLException {
         String query = "DELETE FROM periodical_type WHERE periodical_type.id = " + type.getId();
-        try {
-            if (execute(query) != 0) {
-                return true;
-            }
-        } catch (SQLException e) {
-            logger.error("Failed to delete type", e);
+        if (execute(query) != 0) {
+            return true;
         }
         return false;
     }

@@ -1,15 +1,19 @@
 package service;
 
+import logging.LoggerLoader;
+import org.apache.log4j.Logger;
 import persistence.dao.IPeriodical;
 import persistence.dao.IPeriodicalPeriod;
 import persistence.dao.IPeriodicalType;
 import persistence.dao.daoFactory.DAOFactory;
 import persistence.dao.daoFactory.MySqlDAOFactory;
+import persistence.dao.mySqlDAOImpl.PeriodicalTypeDAO;
 import persistence.entities.Periodical;
 import persistence.entities.PeriodicalPeriod;
 import persistence.entities.PeriodicalType;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -17,26 +21,52 @@ import java.util.ArrayList;
  */
 public class PeriodicalService {
 
+    private static final Logger logger = LoggerLoader.getLogger(PeriodicalService.class);
     private static MySqlDAOFactory mySqlDAOFactory = DAOFactory.getMySqlDAOFactory();
     private static IPeriodical iPeriodical = mySqlDAOFactory.getPeriodicalDAO();
     private static IPeriodicalType iPeriodicalType = mySqlDAOFactory.getPeriodicalTypeDAO();
     private static IPeriodicalPeriod iPeriodicalPeriod = mySqlDAOFactory.getPeriodicalPeriodDAO();
 
     public static ArrayList<Periodical> getPeriodicals() {
-        return iPeriodical.findAllPeriodicals();
+        try {
+            return iPeriodical.findAllPeriodicals();
+        } catch (SQLException e) {
+            logger.error("Failed to find all periodicals ", e);
+            return null;
+        }
     }
 
     public static Periodical getPeriodical(int id) {
-        return iPeriodical.findPeriodicalById(id);
+        try {
+            return iPeriodical.findPeriodicalById(id);
+        } catch (SQLException e) {
+            logger.error("Failed to find periodical by id", e);
+            return null;
+        }
     }
 
     public static boolean createPeriodical(String title, String type, String period,
                                            String category, BigDecimal price, String description) {
 
-        PeriodicalType periodicalType = iPeriodicalType.findTypeByPeriodicalType(type);
-        PeriodicalPeriod periodicalPeriod = iPeriodicalPeriod.findPeriodByPeriodicalPeriod(period);
+        PeriodicalType periodicalType = null;
+        try {
+            periodicalType = iPeriodicalType.findTypeByPeriodicalType(type);
+        } catch (SQLException e) {
+            logger.error("Failed to find type by periodical_type", e);
+        }
+        PeriodicalPeriod periodicalPeriod = null;
+        try {
+            periodicalPeriod = iPeriodicalPeriod.findPeriodByPeriodicalPeriod(period);
+        } catch (SQLException e) {
+            logger.error("Failed to find period by periodical_period", e);
+        }
         Periodical periodical = new Periodical(title, periodicalType, periodicalPeriod, category, price, description);
-        return iPeriodical.insertPeriodical(periodical);
+        try {
+            return iPeriodical.insertPeriodical(periodical);
+        } catch (SQLException e) {
+            logger.error("Failed to insert periodical ", e);
+            return false;
+        }
     }
 
 }

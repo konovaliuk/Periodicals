@@ -17,16 +17,16 @@ public interface ISubscription {
      * @param id - subscription id
      * @return - subscription or null
      */
-    Subscription findSubscriptionById(int id);
+    Subscription findSubscriptionById(int id) throws SQLException;
 
-    public ArrayList<Subscription> findSubscriptionsByUser(int id);
+    public ArrayList<Subscription> findSubscriptionsByUser(int id) throws SQLException;
 
     /**
      * Selection all subscriptions in the database
      *
      * @return - list of subscriptions
      */
-    ArrayList<Subscription> getAllSubscription();
+    ArrayList<Subscription> getAllSubscription() throws SQLException;
 
     /**
      * Insert new subscription
@@ -43,7 +43,7 @@ public interface ISubscription {
      * @param subscription - subscription info to be updated in the database
      * @return - {@code true} if subscription info is updated, {@code false} if no records is updated
      */
-    boolean updateSubscription(Subscription subscription);
+    boolean updateSubscription(Subscription subscription) throws SQLException;
 
     /**
      * Delete subscription
@@ -51,5 +51,5 @@ public interface ISubscription {
      * @param subscription - subscription to be deleted from the database
      * @return - {@code true} if subscription is deleted, {@code false} if no records is deleted
      */
-    boolean deleteSubscription(Subscription subscription);
+    boolean deleteSubscription(Subscription subscription) throws SQLException;
 }

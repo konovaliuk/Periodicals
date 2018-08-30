@@ -17,14 +17,14 @@ public interface IPayment {
      * @param id - payment id
      * @return - payment or null
      */
-    Payment findPaymentById(int id);
+    Payment findPaymentById(int id) throws SQLException;
 
     /**
      * Selection all payments in the database
      *
      * @return - list of payments
      */
-    ArrayList<Payment> findAllPayments();
+    ArrayList<Payment> findAllPayments() throws SQLException;
 
     /**
      * Insert new payment
@@ -41,7 +41,7 @@ public interface IPayment {
      * @param payment    - payment info to be updated in the database
      * @return - {@code true} if payment info is updated, {@code false} if no records is updated
      */
-    boolean updatePayment(Payment payment);
+    boolean updatePayment(Payment payment) throws SQLException;
 
     /**
      * Delete payment
@@ -49,5 +49,5 @@ public interface IPayment {
      * @param payment - payment to be deleted from the database
      * @return - {@code true} if payment is deleted, {@code false} if no records is deleted
      */
-    boolean deletePayment(Payment payment);
+    boolean deletePayment(Payment payment) throws SQLException;
 }

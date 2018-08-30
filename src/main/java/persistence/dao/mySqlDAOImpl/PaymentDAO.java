@@ -13,8 +13,6 @@ import java.util.ArrayList;
  */
 public class PaymentDAO extends AbstractDAO implements IPayment {
 
-    private static final Logger logger = LoggerLoader.getLogger(PaymentDAO.class);
-
     private static PaymentDAO paymentDAO;
 
     private final String SELECT_ALL_FROM_PAYMENT = "SELECT * FROM payment ";
@@ -36,22 +34,18 @@ public class PaymentDAO extends AbstractDAO implements IPayment {
     }
 
     @Override
-    public Payment findPaymentById(int id) {
-        Payment payment = null;
-        try {
-            payment = findById(SELECT_ALL_FROM_PAYMENT + " WHERE payment.id = ?", id,
-                    set -> set != null ? new Payment(
-                            set.getInt("id"),
-                            set.getTimestamp("date"),
-                            set.getBigDecimal("amount")) : null);
-        } catch (SQLException e) {
-            logger.error("Failed to find payment by id", e);
-        }
+    public Payment findPaymentById(int id) throws SQLException {
+        Payment payment;
+        payment = findById(SELECT_ALL_FROM_PAYMENT + " WHERE payment.id = ?", id,
+                set -> set != null ? new Payment(
+                        set.getInt("id"),
+                        set.getTimestamp("date"),
+                        set.getBigDecimal("amount")) : null);
         return payment;
     }
 
     @Override
-    public ArrayList<Payment> findAllPayments() {
+    public ArrayList<Payment> findAllPayments() throws SQLException {
         ArrayList<Payment> payments = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
@@ -63,8 +57,6 @@ public class PaymentDAO extends AbstractDAO implements IPayment {
                     payments.add(payment);
                 }
             }
-        } catch (SQLException e) {
-            logger.error("Failed to find all payments", e);
         }
         return payments;
     }
@@ -82,7 +74,7 @@ public class PaymentDAO extends AbstractDAO implements IPayment {
     }
 
     @Override
-    public boolean updatePayment(Payment payment) {
+    public boolean updatePayment(Payment payment) throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_PAYMENT)) {
             statement.setTimestamp(1, payment.getDate());
@@ -90,21 +82,15 @@ public class PaymentDAO extends AbstractDAO implements IPayment {
             if (statement.executeUpdate() != 0) {
                 return true;
             }
-        } catch (SQLException e) {
-            logger.error("Failed to update payment", e);
         }
         return false;
     }
 
     @Override
-    public boolean deletePayment(Payment payment) {
+    public boolean deletePayment(Payment payment) throws SQLException {
         String query = "DELETE FROM payment WHERE payment.id = " + payment.getId();
-        try {
-            if (execute(query) != 0) {
-                return true;
-            }
-        } catch (SQLException e) {
-            logger.error("Failed to delete payment", e);
+        if (execute(query) != 0) {
+            return true;
         }
         return false;
     }

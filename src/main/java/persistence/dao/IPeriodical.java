@@ -2,6 +2,7 @@ package persistence.dao;
 
 import persistence.entities.Periodical;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -15,14 +16,14 @@ public interface IPeriodical {
      * @param id - periodical id
      * @return - periodical or null
      */
-    Periodical findPeriodicalById(int id);
+    Periodical findPeriodicalById(int id) throws SQLException;
 
     /**
      * Selection all periodicals in the database
      *
      * @return - list of periodicals
      */
-    ArrayList<Periodical> findAllPeriodicals();
+    ArrayList<Periodical> findAllPeriodicals() throws SQLException;
 
     /**
      * Insert new periodical
@@ -30,7 +31,7 @@ public interface IPeriodical {
      * @param periodical - periodical to be inserted to the database
      * @return - {@code true} if new periodical id added, {@code false} if no records is inserted
      */
-    boolean insertPeriodical(Periodical periodical);
+    boolean insertPeriodical(Periodical periodical) throws SQLException;
 
     /**
      * Update periodical info
@@ -38,7 +39,7 @@ public interface IPeriodical {
      * @param periodical - periodical info to be updated in the database
      * @return - {@code true} if periodical info is updated, {@code false} if no records is updated
      */
-    boolean updatePeriodical(Periodical periodical);
+    boolean updatePeriodical(Periodical periodical) throws SQLException;
 
     /**
      * Delete periodical
@@ -46,6 +47,6 @@ public interface IPeriodical {
      * @param periodical - periodical to be deleted from the database
      * @return - {@code true} if periodical is deleted, {@code false} if no records is deleted
      */
-    boolean deletePeriodical(Periodical periodical);
+    boolean deletePeriodical(Periodical periodical) throws SQLException;
 
 }

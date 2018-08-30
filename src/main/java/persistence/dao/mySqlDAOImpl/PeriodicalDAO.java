@@ -15,15 +15,13 @@ import java.util.ArrayList;
  */
 public class PeriodicalDAO extends AbstractDAO implements IPeriodical {
 
-    private static final Logger logger = LoggerLoader.getLogger(PeriodicalDAO.class);
-
     private static PeriodicalDAO periodicalDAO;
 
     private final String SELECT_ALL_FROM_PERIODICAL = "SELECT periodical.id, periodical.title, periodical.periodical_type, " +
-            "            periodical_type.type, periodical.periodical_period, periodical_period.period, periodical_period.term, " +
-            "            periodical.category, periodical.price, periodical.description FROM periodical INNER JOIN periodical_type " +
-            "            ON(periodical.periodical_type = periodical_type.id) " +
-            "            INNER JOIN periodical_period ON (periodical.periodical_period = periodical_period.id) ";
+            "periodical_type.type, periodical.periodical_period, periodical_period.period, periodical_period.term, " +
+            "periodical.category, periodical.price, periodical.description FROM periodical INNER JOIN periodical_type " +
+            "ON(periodical.periodical_type = periodical_type.id) " +
+            "INNER JOIN periodical_period ON (periodical.periodical_period = periodical_period.id) ";
 
     private final String INSERT_PERIODICAL = "INSERT INTO periodical (title,periodical_type, periodical_period, " +
             "category, price, description) " +
@@ -45,26 +43,22 @@ public class PeriodicalDAO extends AbstractDAO implements IPeriodical {
 
 
     @Override
-    public Periodical findPeriodicalById(int id) {
-        Periodical periodical = null;
-        try {
-            periodical = findById(SELECT_ALL_FROM_PERIODICAL + "WHERE periodical.id = ?;", id,
-                    set -> set != null ? new Periodical(
-                            set.getInt("id"),
-                            set.getString("title"),
-                            new PeriodicalType(set.getInt("periodical_type"), set.getString("type")),
-                            new PeriodicalPeriod(set.getInt("periodical_period"), set.getString("period"),set.getInt("term")),
-                            set.getString("category"),
-                            set.getBigDecimal("price"),
-                            set.getString("description")) : null);
-        } catch (SQLException e) {
-            logger.error("Failed to find periodical by id", e);
-        }
+    public Periodical findPeriodicalById(int id) throws SQLException {
+        Periodical periodical;
+        periodical = findById(SELECT_ALL_FROM_PERIODICAL + "WHERE periodical.id = ?;", id,
+                set -> set != null ? new Periodical(
+                        set.getInt("id"),
+                        set.getString("title"),
+                        new PeriodicalType(set.getInt("periodical_type"), set.getString("type")),
+                        new PeriodicalPeriod(set.getInt("periodical_period"), set.getString("period"), set.getInt("term")),
+                        set.getString("category"),
+                        set.getBigDecimal("price"),
+                        set.getString("description")) : null);
         return periodical;
     }
 
     @Override
-    public ArrayList<Periodical> findAllPeriodicals() {
+    public ArrayList<Periodical> findAllPeriodicals() throws SQLException {
         ArrayList<Periodical> periodicals = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
@@ -73,20 +67,18 @@ public class PeriodicalDAO extends AbstractDAO implements IPeriodical {
                     Periodical periodical = new Periodical(resultSet.getInt("id"),
                             resultSet.getString("title"),
                             new PeriodicalType(resultSet.getInt("periodical_type"), resultSet.getString("type")),
-                            new PeriodicalPeriod(resultSet.getInt("periodical_period"), resultSet.getString("period"),resultSet.getInt("term")),                            resultSet.getString("category"),
+                            new PeriodicalPeriod(resultSet.getInt("periodical_period"), resultSet.getString("period"), resultSet.getInt("term")), resultSet.getString("category"),
                             resultSet.getBigDecimal("price"),
                             resultSet.getString("description"));
                     periodicals.add(periodical);
                 }
             }
-        } catch (SQLException e) {
-            logger.error("Failed to find all periodicals ", e);
         }
         return periodicals;
     }
 
     @Override
-    public boolean insertPeriodical(Periodical periodical) {
+    public boolean insertPeriodical(Periodical periodical) throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_PERIODICAL, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, periodical.getTitle());
@@ -101,15 +93,12 @@ public class PeriodicalDAO extends AbstractDAO implements IPeriodical {
                 return true;
             }
 
-        } catch (SQLException e) {
-            logger.error("Failed to insert periodical ", e);
-
         }
         return false;
     }
 
     @Override
-    public boolean updatePeriodical(Periodical periodical) {
+    public boolean updatePeriodical(Periodical periodical) throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_PERIODICAL)) {
             statement.setString(1, periodical.getTitle());
@@ -121,21 +110,15 @@ public class PeriodicalDAO extends AbstractDAO implements IPeriodical {
             if (statement.executeUpdate() != 0) {
                 return true;
             }
-        } catch (SQLException e) {
-            logger.error("Failed to update periodical ", e);
         }
         return false;
     }
 
     @Override
-    public boolean deletePeriodical(Periodical periodical) {
+    public boolean deletePeriodical(Periodical periodical) throws SQLException {
         String query = "DELETE FROM periodical WHERE periodical.id = " + periodical.getId();
-        try {
-            if (execute(query) != 0) {
-                return true;
-            }
-        } catch (SQLException e) {
-            logger.error("Failed to delete periodical", e);
+        if (execute(query) != 0) {
+            return true;
         }
         return false;
     }

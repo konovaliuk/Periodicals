@@ -24,13 +24,12 @@ public class CommandLogin implements ICommand {
         String login = request.getParameter("login");
         String password = request.getParameter("password");
         User user = UserService.login(login, password);
-        if (user != null) {
-            request.getSession().setAttribute("user", user);
-            logger.info("Login new user " + user.getLogin());
-            return Config.getInstance().getProperty(Config.HOME);
+        if (user == null) {
+            request.setAttribute("error", Info.getInstance().getProperty(Info.LOGIN_ERROR));
+            return Config.getInstance().getProperty(Config.LOGIN);
         }
-        request.setAttribute("error", Info.getInstance().getProperty(Info.LOGIN_ERROR));
-        return Config.getInstance().getProperty(Config.LOGIN);
-
+        request.getSession().setAttribute("user", user);
+        logger.info("Login new user " + user.getLogin());
+        return Config.getInstance().getProperty(Config.HOME);
     }
 }

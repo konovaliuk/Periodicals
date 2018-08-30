@@ -16,14 +16,14 @@ public interface IAccount {
      * @param id - account id
      * @return - account or null
      */
-    Account findAccountById(int id);
+    Account findAccountById(int id) throws SQLException;
 
     /**
      * Selection all accounts in the database
      *
      * @return - list of accounts
      */
-    ArrayList<Account> findAllAccounts();
+    ArrayList<Account> findAllAccounts() throws SQLException;
 
     /**
      * Insert new account
@@ -31,7 +31,7 @@ public interface IAccount {
      * @param account - account to be inserted to the database
      * @return - {@code true} if new account id added, {@code false} if no records is inserted
      */
-    boolean insertAccount(Account account);
+    boolean insertAccount(Account account) throws SQLException;
 
     /**
      * Update account info
@@ -48,5 +48,5 @@ public interface IAccount {
      * @param account - account to be deleted from the database
      * @return - {@code true} if account is deleted, {@code false} if no records is deleted
      */
-    boolean deleteAccount(Account account);
+    boolean deleteAccount(Account account) throws SQLException;
 }

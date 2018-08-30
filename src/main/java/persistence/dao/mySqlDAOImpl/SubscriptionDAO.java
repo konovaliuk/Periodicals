@@ -15,8 +15,6 @@ import java.util.ArrayList;
  */
 public class SubscriptionDAO extends AbstractDAO implements ISubscription {
 
-    private static final Logger logger = LoggerLoader.getLogger(SubscriptionDAO.class);
-
     DAOFactory daoFactory = new MySqlDAOFactory();
 
     private static SubscriptionDAO subscriptionDAO;
@@ -42,24 +40,20 @@ public class SubscriptionDAO extends AbstractDAO implements ISubscription {
 
 
     @Override
-    public Subscription findSubscriptionById(int id) {
-        Subscription subscription = null;
-        try {
-            subscription = findById(SELECT_ALL_FROM_SUBSCRIPTION + "WHERE subscription.id = ?", id,
-                    set -> set != null ? new Subscription(
-                            set.getInt("id"),
-                            daoFactory.getUserDAO().findUserById(set.getInt("user_id")),
-                            daoFactory.getPeriodicalDAO().findPeriodicalById(set.getInt("periodical_id")),
-                            daoFactory.getPaymentDAO().findPaymentById(set.getInt("payment_id")),
-                            set.getTimestamp("expiration_date")) : null);
-        } catch (SQLException e) {
-            logger.error("Failed to find subscription by id", e);
-        }
+    public Subscription findSubscriptionById(int id) throws SQLException {
+        Subscription subscription;
+        subscription = findById(SELECT_ALL_FROM_SUBSCRIPTION + "WHERE subscription.id = ?", id,
+                set -> set != null ? new Subscription(
+                        set.getInt("id"),
+                        daoFactory.getUserDAO().findUserById(set.getInt("user_id")),
+                        daoFactory.getPeriodicalDAO().findPeriodicalById(set.getInt("periodical_id")),
+                        daoFactory.getPaymentDAO().findPaymentById(set.getInt("payment_id")),
+                        set.getTimestamp("expiration_date")) : null);
         return subscription;
     }
 
     @Override
-    public ArrayList<Subscription> findSubscriptionsByUser(int id) {
+    public ArrayList<Subscription> findSubscriptionsByUser(int id) throws SQLException {
         ArrayList<Subscription> subscriptions = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
@@ -74,15 +68,12 @@ public class SubscriptionDAO extends AbstractDAO implements ISubscription {
                     subscriptions.add(subscription);
                 }
             }
-        } catch (SQLException e) {
-            logger.error("Failed to find subscriptions by user", e);
-
         }
         return subscriptions;
     }
 
     @Override
-    public ArrayList<Subscription> getAllSubscription() {
+    public ArrayList<Subscription> getAllSubscription() throws SQLException {
         ArrayList<Subscription> subscriptions = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
@@ -96,8 +87,6 @@ public class SubscriptionDAO extends AbstractDAO implements ISubscription {
                     subscriptions.add(subscription);
                 }
             }
-        } catch (SQLException e) {
-            logger.error("Failed to get all subscription", e);
         }
         return subscriptions;
     }
@@ -117,7 +106,7 @@ public class SubscriptionDAO extends AbstractDAO implements ISubscription {
     }
 
     @Override
-    public boolean updateSubscription(Subscription subscription) {
+    public boolean updateSubscription(Subscription subscription) throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_SUBSCRIPTION)) {
             statement.setInt(1, subscription.getUser().getId());
@@ -127,21 +116,15 @@ public class SubscriptionDAO extends AbstractDAO implements ISubscription {
             if (statement.executeUpdate() != 0) {
                 return true;
             }
-        } catch (SQLException e) {
-            logger.error("Failed to update subscription", e);
         }
         return false;
     }
 
     @Override
-    public boolean deleteSubscription(Subscription subscription) {
+    public boolean deleteSubscription(Subscription subscription) throws SQLException {
         String query = "DELETE FROM subscription WHERE subscription.id = " + subscription.getId();
-        try {
-            if (execute(query) != 0) {
-                return true;
-            }
-        } catch (SQLException e) {
-            logger.error("Failed to delete subscription", e);
+        if (execute(query) != 0) {
+            return true;
         }
         return false;
     }

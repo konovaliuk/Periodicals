@@ -13,8 +13,9 @@ public class Info {
     public static final String INCORRECT_LOGIN = "INCORRECT_LOGIN";
     public static final String INCORRECT_PASSWORD = "INCORRECT_PASSWORD";
     public static final String INCORRECT_DATA_TRY_AGAIN = "INCORRECT_DATA_TRY_AGAIN";
-    public static final String YOU_DONT_HAVE_ENOUGH_MONEY = "YOU DON\'T HAVE ENOUGH MONEY";
+    public static final String YOU_DONT_HAVE_ENOUGH_MONEY = "YOU_DONT_HAVE_ENOUGH_MONEY";
     public static final String DONE = "DONE";
+    public static final String ERROR = "ERROR";
 
     public static Info getInstance() {
         if (message == null) {

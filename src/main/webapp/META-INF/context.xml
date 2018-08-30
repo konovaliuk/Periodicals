@@ -1,18 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
-<Context path="/dbcp" docBase="dbcp" debug="5"
-         reloadable="true" crossContext="true">
-
+<Context>
     <Resource name="jdbc/periodicals" auth="Container"
               type="javax.sql.DataSource" removeAbandonedOnBorrow="true"
-              removeAbandonedTimeout="300" maxTotal="100"
-              maxIdle="30" maxWaitMillis="10000" username="root"
-              password="root"
+              maxTotal="100" maxIdle="30" maxWaitMillis="10000"
+              username="root" password="root"
               driverClassName="com.mysql.jdbc.Driver"
               url="jdbc:mysql://localhost:3306/periodicals?serverTimezone=GMT"/>
-
-    <Connector port="80" maxHttpHeaderSize="8192" maxProcessors="150"
-               maxThreads="150" minSpareThreads="25" maxSpareThreads="75"
-               enableLookups="false" redirectPort="8443" acceptCount="150"
-               connectionTimeout="20000" disableUploadTimeout="true"/>
 </Context>
 

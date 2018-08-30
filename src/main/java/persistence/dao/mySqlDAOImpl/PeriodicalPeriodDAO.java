@@ -14,8 +14,6 @@ import java.util.ArrayList;
  */
 public class PeriodicalPeriodDAO extends AbstractDAO implements IPeriodicalPeriod {
 
-    private static final Logger logger = LoggerLoader.getLogger(PeriodicalPeriodDAO.class);
-
     private static PeriodicalPeriodDAO periodicalPeriodDAO;
 
     private PeriodicalPeriodDAO() {
@@ -37,24 +35,19 @@ public class PeriodicalPeriodDAO extends AbstractDAO implements IPeriodicalPerio
 
 
     @Override
-    public PeriodicalPeriod findPeriodById(int id) {
-        PeriodicalPeriod period = null;
+    public PeriodicalPeriod findPeriodById(int id) throws SQLException {
+        PeriodicalPeriod period;
 
-        try {
-            period = findById(SELECT_ALL_FROM_PERIODICAL_PERIOD + "WHERE periodical_period.id= ?", id,
-                    set -> set != null ? new PeriodicalPeriod(
-                            set.getInt("id"),
-                            set.getString("period"),
-                            set.getInt("term")) : null);
-        } catch (SQLException e) {
-            logger.error("Failed to find period by id", e);
-        }
-
+        period = findById(SELECT_ALL_FROM_PERIODICAL_PERIOD + "WHERE periodical_period.id= ?", id,
+                set -> set != null ? new PeriodicalPeriod(
+                        set.getInt("id"),
+                        set.getString("period"),
+                        set.getInt("term")) : null);
         return period;
     }
 
     @Override
-    public PeriodicalPeriod findPeriodByPeriodicalPeriod(String type) {
+    public PeriodicalPeriod findPeriodByPeriodicalPeriod(String type) throws SQLException {
         PeriodicalPeriod periodicalPeriod = null;
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_ALL_FROM_PERIODICAL_PERIOD + "WHERE periodical_period.period= ?")) {
@@ -66,14 +59,12 @@ public class PeriodicalPeriodDAO extends AbstractDAO implements IPeriodicalPerio
                             resultSet.getInt("term"));
                 }
             }
-        } catch (SQLException e) {
-            logger.error("Failed to find period by periodical_period", e);
         }
         return periodicalPeriod;
     }
 
     @Override
-    public ArrayList<PeriodicalPeriod> getAllPeriods() {
+    public ArrayList<PeriodicalPeriod> getAllPeriods() throws SQLException {
         ArrayList<PeriodicalPeriod> periods = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
@@ -86,14 +77,12 @@ public class PeriodicalPeriodDAO extends AbstractDAO implements IPeriodicalPerio
                     periods.add(period);
                 }
             }
-        } catch (SQLException e) {
-            logger.error("Failed to get all period", e);
         }
         return periods;
     }
 
     @Override
-    public boolean insertPeriod(PeriodicalPeriod period) {
+    public boolean insertPeriod(PeriodicalPeriod period) throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_PERIOD, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, period.getPeriod());
@@ -103,14 +92,12 @@ public class PeriodicalPeriodDAO extends AbstractDAO implements IPeriodicalPerio
                 return true;
             }
 
-        } catch (SQLException e) {
-            logger.error("Failed to insert period", e);
         }
         return false;
     }
 
     @Override
-    public boolean updatePeriod(PeriodicalPeriod period) {
+    public boolean updatePeriod(PeriodicalPeriod period) throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_PERIOD)) {
             statement.setString(1, period.getPeriod());
@@ -118,21 +105,15 @@ public class PeriodicalPeriodDAO extends AbstractDAO implements IPeriodicalPerio
             if (statement.executeUpdate() != 0) {
                 return true;
             }
-        } catch (SQLException e) {
-            logger.error("Failed to update period", e);
         }
         return false;
     }
 
     @Override
-    public boolean deletePeriod(PeriodicalPeriod period) {
+    public boolean deletePeriod(PeriodicalPeriod period) throws SQLException {
         String query = "DELETE FROM periodical_period WHERE periodical_period.id = " + period.getId();
-        try {
-            if (execute(query) != 0) {
-                return true;
-            }
-        } catch (SQLException e) {
-            logger.error("Failed to delete period", e);
+        if (execute(query) != 0) {
+            return true;
         }
         return false;
     }
