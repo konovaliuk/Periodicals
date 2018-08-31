@@ -7,7 +7,6 @@ import persistence.dao.IPeriodicalPeriod;
 import persistence.dao.IPeriodicalType;
 import persistence.dao.daoFactory.DAOFactory;
 import persistence.dao.daoFactory.MySqlDAOFactory;
-import persistence.dao.mySqlDAOImpl.PeriodicalTypeDAO;
 import persistence.entities.Periodical;
 import persistence.entities.PeriodicalPeriod;
 import persistence.entities.PeriodicalType;
@@ -27,9 +26,10 @@ public class PeriodicalService {
     private static IPeriodicalType iPeriodicalType = mySqlDAOFactory.getPeriodicalTypeDAO();
     private static IPeriodicalPeriod iPeriodicalPeriod = mySqlDAOFactory.getPeriodicalPeriodDAO();
 
-    public static ArrayList<Periodical> getPeriodicals() {
+    public static ArrayList<Periodical> getPeriodicals(int currentPage, int recordsPerPage) {
+        int start = currentPage * recordsPerPage - recordsPerPage;
         try {
-            return iPeriodical.findAllPeriodicals();
+            return iPeriodical.findAllPeriodicals(start, recordsPerPage);
         } catch (SQLException e) {
             logger.error("Failed to find all periodicals ", e);
             return null;
@@ -66,6 +66,15 @@ public class PeriodicalService {
         } catch (SQLException e) {
             logger.error("Failed to insert periodical ", e);
             return false;
+        }
+    }
+
+    public static int getNumberOfRows() {
+        try {
+            return iPeriodical.selectNumberOfRows();
+        } catch (SQLException e) {
+            logger.error("Failed to select number of rows ", e);
+            return 0;
         }
     }
 

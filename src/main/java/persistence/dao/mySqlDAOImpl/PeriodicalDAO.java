@@ -7,6 +7,7 @@ import persistence.entities.Periodical;
 import persistence.entities.PeriodicalPeriod;
 import persistence.entities.PeriodicalType;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -23,6 +24,12 @@ public class PeriodicalDAO extends AbstractDAO implements IPeriodical {
             "ON(periodical.periodical_type = periodical_type.id) " +
             "INNER JOIN periodical_period ON (periodical.periodical_period = periodical_period.id) ";
 
+    private final String SELECT_ALL_FROM_PERIODICAL_LIMIT = "SELECT periodical.id, periodical.title, periodical.periodical_type, " +
+            "periodical_type.type, periodical.periodical_period, periodical_period.period, periodical_period.term, " +
+            "periodical.category, periodical.price, periodical.description FROM periodical INNER JOIN periodical_type " +
+            "ON(periodical.periodical_type = periodical_type.id) " +
+            "INNER JOIN periodical_period ON (periodical.periodical_period = periodical_period.id) ORDER BY id LIMIT ?,?";
+
     private final String INSERT_PERIODICAL = "INSERT INTO periodical (title,periodical_type, periodical_period, " +
             "category, price, description) " +
             "VALUES (?,?,?,?,?,?)";
@@ -30,6 +37,8 @@ public class PeriodicalDAO extends AbstractDAO implements IPeriodical {
     private final String UPDATE_PERIODICAL = "UPDATE periodical SET periodical.title=?, periodical.periodical_type = ?, " +
             "periodical.periodical_period = ?, periodical.category = ?, periodical.price = ?, periodical.description =? " +
             "WHERE periodical.id = ?";
+
+    private final String SELECT_COUNT_ROWS = "SELECT COUNT(*) FROM periodicals.periodical";
 
     private PeriodicalDAO() {
     }
@@ -58,11 +67,13 @@ public class PeriodicalDAO extends AbstractDAO implements IPeriodical {
     }
 
     @Override
-    public ArrayList<Periodical> findAllPeriodicals() throws SQLException {
+    public ArrayList<Periodical> findAllPeriodicals(int start, int recordsPerPage) throws SQLException {
         ArrayList<Periodical> periodicals = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();
-             Statement statement = connection.createStatement()) {
-            try (ResultSet resultSet = statement.executeQuery(SELECT_ALL_FROM_PERIODICAL)) {
+             PreparedStatement statement = connection.prepareStatement(SELECT_ALL_FROM_PERIODICAL_LIMIT)) {
+            statement.setInt(1, start);
+            statement.setInt(2, recordsPerPage);
+            try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     Periodical periodical = new Periodical(resultSet.getInt("id"),
                             resultSet.getString("title"),
@@ -75,6 +86,16 @@ public class PeriodicalDAO extends AbstractDAO implements IPeriodical {
             }
         }
         return periodicals;
+    }
+
+    @Override
+    public int selectNumberOfRows() throws SQLException {
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(SELECT_COUNT_ROWS);) {
+            resultSet.next();
+            return resultSet.getInt(1);
+        }
     }
 
     @Override
@@ -122,4 +143,5 @@ public class PeriodicalDAO extends AbstractDAO implements IPeriodical {
         }
         return false;
     }
+
 }

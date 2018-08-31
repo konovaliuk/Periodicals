@@ -1,8 +1,10 @@
 package commands.commandImpl;
 
 import commands.ICommand;
+import logging.LoggerLoader;
 import manager.Config;
 import manager.Info;
+import org.apache.log4j.Logger;
 import service.PeriodicalService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +15,7 @@ import java.math.BigDecimal;
  * Created by Julia on 27.08.2018
  */
 public class CommandCreatePeriodical implements ICommand {
+    private Logger logger = LoggerLoader.getLogger(CommandCreatePeriodical.class);
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
@@ -28,6 +31,7 @@ public class CommandCreatePeriodical implements ICommand {
             return Config.getInstance().getProperty(Config.CREATE_PERIODICAL);
         }
         request.setAttribute("info", Info.getInstance().getProperty(Info.DONE));
+        logger.info("Created  new periodical " + title);
         return Config.getInstance().getProperty(Config.CREATE_PERIODICAL);
     }
 }

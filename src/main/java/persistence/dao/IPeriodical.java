@@ -20,10 +20,19 @@ public interface IPeriodical {
 
     /**
      * Selection all periodicals in the database
-     *
+     * @param start - start record
+     * @param recordsPerPage - record count
      * @return - list of periodicals
      */
-    ArrayList<Periodical> findAllPeriodicals() throws SQLException;
+    ArrayList<Periodical> findAllPeriodicals(int start,int recordsPerPage) throws SQLException;
+
+
+    /**
+     * Selection count of rows in the table periodical
+     *
+     * @return - count of rows
+     */
+    int selectNumberOfRows() throws SQLException;
 
     /**
      * Insert new periodical

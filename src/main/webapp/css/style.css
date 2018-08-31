@@ -277,8 +277,7 @@ Container style
     margin: 2% 2% 70px 3%;
     background-color: white;
     border-radius: 5px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
 }
 
 .container ul li p {
@@ -377,3 +376,22 @@ span.dropcaps {
     width: 80%;
     margin: 30px auto;
 }*/
+
+/*Pagination style*/
+.pagination {
+    display: inline-block;
+}
+
+.pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+.pagination a.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.pagination a:hover:not(.active) {background-color: #ddd;}

@@ -3,6 +3,8 @@ package tags;
 import persistence.entities.Periodical;
 import service.PeriodicalService;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
@@ -14,10 +16,12 @@ import java.util.ArrayList;
  */
 public class CatalogTag extends TagSupport {
     @Override
-    public int doStartTag() throws JspException {
+    public int doStartTag() {
+        ServletRequest request = pageContext.getRequest();
+
         PeriodicalService periodicalService = new PeriodicalService();
-        ArrayList<Periodical> periodicals = periodicalService.getPeriodicals();
-        pageContext.getRequest().setAttribute("periodicals", periodicals);
+        ArrayList<Periodical> periodicals = periodicalService.getPeriodicals(1, 3);
+        request.setAttribute("periodicals", periodicals);
 
         return SKIP_BODY;
     }

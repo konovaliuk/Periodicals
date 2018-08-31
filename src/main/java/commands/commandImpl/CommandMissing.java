@@ -1,6 +1,8 @@
 package commands.commandImpl;
 
 import commands.ICommand;
+import manager.Config;
+import service.PeriodicalService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

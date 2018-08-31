@@ -43,5 +43,8 @@
         </div>
     </div>
 </div>
+<div class="head">
+    <h1><fmt:message key="periodicals"/></h1>
+</div>
 </body>
 </html>

@@ -1,9 +1,7 @@
 package persistence.dao.mySqlDAOImpl;
 
 
-import logging.LoggerLoader;
-import org.apache.log4j.Logger;
-import persistence.dao.dataSource.DataSource;
+import persistence.dao.dataSource.MySqlDataSource;
 import persistence.dao.Mapper;
 
 import java.sql.*;
@@ -13,7 +11,7 @@ import java.sql.*;
  */
 public abstract class AbstractDAO {
 
-    protected DataSource dataSource = DataSource.getInstance();
+    protected MySqlDataSource dataSource = MySqlDataSource.getInstance();
 
 
     protected <T> T findById(String query, int id, Mapper<T> mapper) throws SQLException {

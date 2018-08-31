@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
  * Created by Julia on 15.08.2018
  */
 public class CommandLogin implements ICommand {
-    Logger logger = LoggerLoader.getLogger(CommandLogin.class);
+    private Logger logger = LoggerLoader.getLogger(CommandLogin.class);
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
@@ -29,7 +29,7 @@ public class CommandLogin implements ICommand {
             return Config.getInstance().getProperty(Config.LOGIN);
         }
         request.getSession().setAttribute("user", user);
-        logger.info("Login new user " + user.getLogin());
+        logger.info("Sign in user " + user.getLogin());
         return Config.getInstance().getProperty(Config.HOME);
     }
 }

@@ -20,6 +20,8 @@
         <servlet-class>servlet.Controller</servlet-class>
     </servlet>
 
+
+
     <servlet-mapping>
         <servlet-name>Controller</servlet-name>
         <url-pattern>/Controller</url-pattern>
@@ -31,6 +33,7 @@
         <url-pattern>/subscribe</url-pattern>
         <url-pattern>/createPeriodical</url-pattern>
         <url-pattern>/updatePeriodical</url-pattern>
+        <url-pattern>/getCatalog</url-pattern>
     </servlet-mapping>
 
     <filter>
@@ -57,6 +60,7 @@
     <error-page>
         <location>/css/images/error.png</location>
     </error-page>
+    
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>

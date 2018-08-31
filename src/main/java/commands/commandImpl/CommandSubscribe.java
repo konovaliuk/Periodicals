@@ -1,8 +1,10 @@
 package commands.commandImpl;
 
 import commands.ICommand;
+import logging.LoggerLoader;
 import manager.Config;
 import manager.Info;
+import org.apache.log4j.Logger;
 import persistence.entities.Account;
 import persistence.entities.Periodical;
 import persistence.entities.User;
@@ -16,6 +18,7 @@ import java.math.BigDecimal;
  * Created by Julia on 22.08.2018
  */
 public class CommandSubscribe implements ICommand {
+    private Logger logger = LoggerLoader.getLogger(CommandSubscribe.class);
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
@@ -40,8 +43,9 @@ public class CommandSubscribe implements ICommand {
         if (!SubscriptionService.subscribe(user, periodical, totalAmount, term)) {
             return Config.getInstance().getProperty(Config.ERROR);
         }
+        logger.info(user.getLogin() + " subscribed to " + periodical.getTitle());
+        request.setAttribute("info", Info.getInstance().getProperty(Info.DONE));
         return Config.getInstance().getProperty(Config.PERIODICAL_INFO);
-        /*return "/WEB-INF/pages/userPeriodicals.jsp";*/
     }
 
     private BigDecimal calculateTotalAmount(int term, Periodical periodical) {

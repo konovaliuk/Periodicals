@@ -57,7 +57,7 @@
                             <option value="12">year</option>
                         </c:when>
                         <c:when test="${periodicalTerm==3}">
-                            <option value="6">sixMonth</option>
+                            <option value="6">6 month</option>
                             <option value="12">year</option>
                         </c:when>
                         <c:when test="${periodicalTerm==6}">
@@ -65,15 +65,6 @@
                         </c:when>
                     </c:choose>
                 </select>
-                    <%--<select name="term">
-                            &lt;%&ndash;<option disabled>Select period</option>&ndash;%&gt;
-                            &lt;%&ndash;<option value="0" selected disabled hidden>Choose here</option>&ndash;%&gt;
-                        <option value="0" selected="selected">Select period</option>
-                        <option value="1">month</option>
-                        <option value="3">threeMonth</option>
-                        <option value="6">sixMonth</option>
-                        <option value="12">year</option>
-                    </select>--%>
                 <input type="hidden" name="command" value="subscribe" required>
                 <div class="submitButton">
                     <button type="submit">Subscribe</button>

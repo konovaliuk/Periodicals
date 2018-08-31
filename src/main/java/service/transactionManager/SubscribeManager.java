@@ -1,5 +1,7 @@
 package service.transactionManager;
 
+import logging.LoggerLoader;
+import org.apache.log4j.Logger;
 import persistence.dao.IAccount;
 import persistence.dao.IPayment;
 import persistence.dao.ISubscription;
@@ -14,7 +16,8 @@ import java.sql.SQLException;
 /**
  * Created by Julia on 28.08.2018
  */
-public class SubscribeManager extends DAOManager {
+public class SubscribeManager extends TransactionManager {
+    private static final Logger logger = LoggerLoader.getLogger(SubscribeManager.class);
     private MySqlDAOFactory mySqlDAOFactory = DAOFactory.getMySqlDAOFactory();
     private IAccount iAccount = mySqlDAOFactory.getAccountDAO();
     private IPayment iPayment = mySqlDAOFactory.getPaymentDAO();
@@ -29,18 +32,17 @@ public class SubscribeManager extends DAOManager {
             iSubscription.insertSubscription(subscription, connection);
             connection.commit();
         } catch (SQLException e) {
+            logger.error("Transaction failed", e);
             try {
-                connection.rollback();
+                if (connection != null) {
+                    connection.rollback();
+                }
             } catch (SQLException e1) {
-                e1.printStackTrace();
+                logger.error("Failed to rollback", e1);
             }
             return false;
         } finally {
-            try {
-                close(connection);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            close(connection);
         }
         return true;
     }
