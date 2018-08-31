@@ -69,6 +69,29 @@ public class PeriodicalService {
         }
     }
 
+    public static boolean updatePeriodical(int id, String title, String type, String period,
+                                           String category, BigDecimal price, String description) {
+        PeriodicalType periodicalType = null;
+        try {
+            periodicalType = iPeriodicalType.findTypeByPeriodicalType(type);
+        } catch (SQLException e) {
+            logger.error("Failed to find type by periodical_type", e);
+        }
+        PeriodicalPeriod periodicalPeriod = null;
+        try {
+            periodicalPeriod = iPeriodicalPeriod.findPeriodByPeriodicalPeriod(period);
+        } catch (SQLException e) {
+            logger.error("Failed to find period by periodical_period", e);
+        }
+        Periodical periodical = new Periodical(id, title, periodicalType, periodicalPeriod, category, price, description);
+        try {
+            return iPeriodical.updatePeriodical(periodical);
+        } catch (SQLException e) {
+            logger.error("Failed to update periodical ", e);
+            return false;
+        }
+    }
+
     public static int getNumberOfRows() {
         try {
             return iPeriodical.selectNumberOfRows();

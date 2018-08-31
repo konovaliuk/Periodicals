@@ -25,6 +25,8 @@ public class UserDAO extends AbstractDAO implements IUser {
     private final String UPDATE_USER = "UPDATE user SET user.user_role = ?, user.name = ?, user.login = ?, user.password = ?\n" +
             "WHERE user.id = ?";
 
+    private final String DELETE_USER = "DELETE FROM user WHERE user.id = ?";
+
     private UserDAO() {
     }
 
@@ -83,12 +85,10 @@ public class UserDAO extends AbstractDAO implements IUser {
             statement.setString(2, user.getName());
             statement.setString(3, user.getLogin());
             statement.setString(4, user.getPassword());
-            if (statement.executeUpdate() != 0) {
-                user.setId(getGeneratedKey(statement));
-                return true;
-            }
+            statement.executeUpdate();
+            user.setId(getGeneratedKey(statement));
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -100,19 +100,18 @@ public class UserDAO extends AbstractDAO implements IUser {
             statement.setString(3, user.getLogin());
             statement.setString(4, user.getPassword());
             statement.setInt(5, user.getId());
-            if (statement.executeUpdate() != 0) {
-                return true;
-            }
+            statement.executeUpdate();
         }
-        return false;
+        return true;
     }
 
     @Override
     public boolean deleteUser(User user) throws SQLException {
-        String query = "DELETE FROM user WHERE user.id = " + user.getId();
-        if (execute(query) != 0) {
-            return true;
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_USER)) {
+            statement.setInt(1, user.getId());
+            statement.executeUpdate();
         }
-        return false;
+        return true;
     }
 }

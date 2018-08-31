@@ -38,6 +38,8 @@ public class PeriodicalDAO extends AbstractDAO implements IPeriodical {
             "periodical.periodical_period = ?, periodical.category = ?, periodical.price = ?, periodical.description =? " +
             "WHERE periodical.id = ?";
 
+    private final String DELETE_PERIODICAL = "DELETE FROM periodical WHERE periodical.id =?";
+
     private final String SELECT_COUNT_ROWS = "SELECT COUNT(*) FROM periodicals.periodical";
 
     private PeriodicalDAO() {
@@ -92,7 +94,7 @@ public class PeriodicalDAO extends AbstractDAO implements IPeriodical {
     public int selectNumberOfRows() throws SQLException {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(SELECT_COUNT_ROWS);) {
+             ResultSet resultSet = statement.executeQuery(SELECT_COUNT_ROWS)) {
             resultSet.next();
             return resultSet.getInt(1);
         }
@@ -108,14 +110,10 @@ public class PeriodicalDAO extends AbstractDAO implements IPeriodical {
             statement.setString(4, periodical.getCategory());
             statement.setBigDecimal(5, periodical.getPrice());
             statement.setString(6, periodical.getDescription());
-
-            if (statement.executeUpdate() != 0) {
-                periodical.setId(getGeneratedKey(statement));
-                return true;
-            }
-
+            statement.executeUpdate();
+            periodical.setId(getGeneratedKey(statement));
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -128,20 +126,20 @@ public class PeriodicalDAO extends AbstractDAO implements IPeriodical {
             statement.setString(4, periodical.getCategory());
             statement.setBigDecimal(5, periodical.getPrice());
             statement.setString(6, periodical.getDescription());
-            if (statement.executeUpdate() != 0) {
-                return true;
-            }
+            statement.setInt(7, periodical.getId());
+            statement.executeUpdate();
         }
-        return false;
+        return true;
     }
 
     @Override
     public boolean deletePeriodical(Periodical periodical) throws SQLException {
-        String query = "DELETE FROM periodical WHERE periodical.id = " + periodical.getId();
-        if (execute(query) != 0) {
-            return true;
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_PERIODICAL)) {
+            statement.setInt(1, periodical.getId());
+            statement.executeUpdate();
         }
-        return false;
+        return true;
     }
 
 }

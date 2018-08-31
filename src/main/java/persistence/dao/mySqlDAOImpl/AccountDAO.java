@@ -21,6 +21,8 @@ public class AccountDAO extends AbstractDAO implements IAccount {
     private final String UPDATE_ACCOUNT = "UPDATE account SET account.amount = ?" +
             " WHERE account.id = ?";
 
+    private final String DELETE_ACCOUNT = "DELETE FROM account WHERE account.id = ?";
+
     private AccountDAO() {
     }
 
@@ -44,13 +46,14 @@ public class AccountDAO extends AbstractDAO implements IAccount {
     @Override
     public ArrayList<Account> findAllAccounts() throws SQLException {
         ArrayList<Account> accounts = new ArrayList<>();
-        Connection connection = dataSource.getConnection();
-        Statement statement = connection.createStatement();
-        try (ResultSet resultSet = statement.executeQuery(SELECT_ALL_FROM_ACCOUNT)) {
-            while (resultSet.next()) {
-                Account account = new Account(resultSet.getInt("id"),
-                        resultSet.getBigDecimal("amount"));
-                accounts.add(account);
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement()) {
+            try (ResultSet resultSet = statement.executeQuery(SELECT_ALL_FROM_ACCOUNT)) {
+                while (resultSet.next()) {
+                    Account account = new Account(resultSet.getInt("id"),
+                            resultSet.getBigDecimal("amount"));
+                    accounts.add(account);
+                }
             }
         }
         return accounts;
@@ -58,14 +61,12 @@ public class AccountDAO extends AbstractDAO implements IAccount {
 
     @Override
     public boolean insertAccount(Account account) throws SQLException {
-        Connection connection = dataSource.getConnection();
-        PreparedStatement statement = connection.prepareStatement(INSERT_ACCOUNT);
-        statement.setBigDecimal(1, account.getAmount());
-        if (statement.executeUpdate() != 0) {
-            /*  account.setId(getGeneratedKey(statement));*/
-            return true;
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(INSERT_ACCOUNT)) {
+            statement.setBigDecimal(1, account.getAmount());
+            statement.executeUpdate();
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -73,18 +74,17 @@ public class AccountDAO extends AbstractDAO implements IAccount {
         PreparedStatement statement = connection.prepareStatement(UPDATE_ACCOUNT);
         statement.setBigDecimal(1, account.getAmount());
         statement.setInt(2, account.getId());
-        if (statement.executeUpdate() != 0) {
-            return true;
-        }
-        return false;
+        statement.executeUpdate();
+        return true;
     }
 
     @Override
     public boolean deleteAccount(Account account) throws SQLException {
-        String query = "DELETE FROM account WHERE account.id = " + account.getId();
-        if (execute(query) != 0) {
-            return true;
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_ACCOUNT)) {
+            statement.setInt(1, account.getId());
+            statement.executeUpdate();
         }
-        return false;
+        return true;
     }
 }

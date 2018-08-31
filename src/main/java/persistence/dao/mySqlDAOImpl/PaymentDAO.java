@@ -23,6 +23,8 @@ public class PaymentDAO extends AbstractDAO implements IPayment {
     private final String UPDATE_PAYMENT = "UPDATE payment SET payment.date = ?, payment.amount = ?" +
             "WHERE payment.id = ?";
 
+    private final String DELETE_PAYMENT = "DELETE FROM payment WHERE payment.id = ?";
+
     private PaymentDAO() {
     }
 
@@ -66,11 +68,9 @@ public class PaymentDAO extends AbstractDAO implements IPayment {
         PreparedStatement statement = connection.prepareStatement(INSERT_PAYMENT, Statement.RETURN_GENERATED_KEYS);
         statement.setTimestamp(1, payment.getDate());
         statement.setBigDecimal(2, payment.getAmount());
-        if (statement.executeUpdate() != 0) {
-            payment.setId(getGeneratedKey(statement));
-            return true;
-        }
-        return false;
+        statement.executeUpdate();
+        payment.setId(getGeneratedKey(statement));
+        return true;
     }
 
     @Override
@@ -79,19 +79,18 @@ public class PaymentDAO extends AbstractDAO implements IPayment {
              PreparedStatement statement = connection.prepareStatement(UPDATE_PAYMENT)) {
             statement.setTimestamp(1, payment.getDate());
             statement.setBigDecimal(2, payment.getAmount());
-            if (statement.executeUpdate() != 0) {
-                return true;
-            }
+            statement.executeUpdate();
         }
-        return false;
+        return true;
     }
 
     @Override
     public boolean deletePayment(Payment payment) throws SQLException {
-        String query = "DELETE FROM payment WHERE payment.id = " + payment.getId();
-        if (execute(query) != 0) {
-            return true;
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_PAYMENT)) {
+            statement.setInt(1, payment.getId());
+            statement.executeUpdate();
         }
-        return false;
+        return true;
     }
 }

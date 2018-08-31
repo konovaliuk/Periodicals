@@ -28,6 +28,8 @@ public class SubscriptionDAO extends AbstractDAO implements ISubscription {
             "subscription.payment_id = ?, subscription.expiration_date = ? " +
             "WHERE subscription.id = ?";
 
+    private final String DELETE_SUBSCRIPTION = "DELETE FROM subscription WHERE subscription.id = ?";
+
     private SubscriptionDAO() {
     }
 
@@ -98,11 +100,8 @@ public class SubscriptionDAO extends AbstractDAO implements ISubscription {
         statement.setInt(2, subscription.getPeriodical().getId());
         statement.setInt(3, subscription.getPayment().getId());
         statement.setTimestamp(4, subscription.getExpiration_date());
-        if (statement.executeUpdate() != 0) {
-            subscription.setId(getGeneratedKey(statement));
-            return true;
-        }
-        return false;
+        statement.executeUpdate();
+        return true;
     }
 
     @Override
@@ -113,20 +112,19 @@ public class SubscriptionDAO extends AbstractDAO implements ISubscription {
             statement.setInt(2, subscription.getPeriodical().getId());
             statement.setInt(3, subscription.getPayment().getId());
             statement.setTimestamp(4, subscription.getExpiration_date());
-            if (statement.executeUpdate() != 0) {
-                return true;
-            }
+            statement.executeUpdate();
         }
-        return false;
+        return true;
     }
 
     @Override
     public boolean deleteSubscription(Subscription subscription) throws SQLException {
-        String query = "DELETE FROM subscription WHERE subscription.id = " + subscription.getId();
-        if (execute(query) != 0) {
-            return true;
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_SUBSCRIPTION)) {
+            statement.setInt(1, subscription.getId());
+            statement.executeUpdate();
         }
-        return false;
+        return true;
     }
 
 }

@@ -26,6 +26,8 @@ public class PeriodicalPeriodDAO extends AbstractDAO implements IPeriodicalPerio
     private final String UPDATE_PERIOD = "UPDATE periodical_period SET periodical_period.period = ?, periodical_period.term = ?" +
             "WHERE periodical_period.id = ?";
 
+    private final String DELETE_PERIODICAL_PERIOD = "DELETE FROM periodical_period WHERE periodical_period.id = ?";
+
     public static PeriodicalPeriodDAO getInstance() {
         if (periodicalPeriodDAO == null) {
             periodicalPeriodDAO = new PeriodicalPeriodDAO();
@@ -102,19 +104,18 @@ public class PeriodicalPeriodDAO extends AbstractDAO implements IPeriodicalPerio
              PreparedStatement statement = connection.prepareStatement(UPDATE_PERIOD)) {
             statement.setString(1, period.getPeriod());
             statement.setInt(2, period.getTerm());
-            if (statement.executeUpdate() != 0) {
-                return true;
-            }
+            statement.executeUpdate();
         }
-        return false;
+        return true;
     }
 
     @Override
     public boolean deletePeriod(PeriodicalPeriod period) throws SQLException {
-        String query = "DELETE FROM periodical_period WHERE periodical_period.id = " + period.getId();
-        if (execute(query) != 0) {
-            return true;
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_PERIODICAL_PERIOD)) {
+            statement.setInt(1, period.getId());
+            statement.executeUpdate();
         }
-        return false;
+        return true;
     }
 }

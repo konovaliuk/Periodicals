@@ -53,6 +53,5 @@
         <a href="Controller?command=getCatalog&recordsPerPage=${recordsPerPage}&currentPage=${currentPage+1}">&raquo;</a>
     </c:if>
 </div>
-</div>--%>
 </body>
 </html>

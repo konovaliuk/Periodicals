@@ -34,13 +34,14 @@
     </p>
     <c:choose>
         <c:when test="${role=='admin'}">
-            <form name="updateForm" action="updatePeriodical" method="post">
-                <input type="hidden" name="command" value="updatePeriodical" required>
-                <div class="submitButton">
-                    <button type="submit">Update periodical</button>
-                </div>
+            <%--<form name="updateForm" action="updatePeriodical" method="post">--%>
+            <a href="updatePeriodical">Update Periodical</a>
+            <%--<input type="hidden" name="command" value="updatePeriodical" required>--%>
+            <%-- <div class="submitButton">
+                 <button type="submit">Update periodical</button>
+             </div>--%>
 
-            </form>
+            <%-- </form>--%>
         </c:when>
         <c:when test="${isSubscribe=='true'}">
             <a href="../../css/images/book.jpg"><p style="color: chocolate; font-style: italic"> Read</p></a>

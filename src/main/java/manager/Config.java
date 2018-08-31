@@ -17,6 +17,7 @@ public class Config {
     public static final String SUBSCRIBE = "SUBSCRIBE";
     public static final String GET_USER_PERIODICALS = "GET_USER_PERIODICALS";
     public static final String CREATE_PERIODICAL = "CREATE_PERIODICAL";
+    public static final String UPDATE_PERIODICAL = "UPDATE_PERIODICAL";
     public static final String CATALOG = "CATALOG";
     public static final String ERROR = "ERROR";
 

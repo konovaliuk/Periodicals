@@ -27,13 +27,6 @@ public abstract class AbstractDAO {
         return null;
     }
 
-    protected int execute(String query) throws SQLException {
-        try (Connection connection = dataSource.getConnection();
-             Statement statement = connection.createStatement()) {
-            return statement.executeUpdate(query);
-        }
-    }
-
     protected int getGeneratedKey(PreparedStatement statement) throws SQLException {
         try (ResultSet resultSet = statement.getGeneratedKeys()) {
             if (resultSet.next()) {

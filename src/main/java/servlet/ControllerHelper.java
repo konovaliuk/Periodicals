@@ -24,6 +24,7 @@ public class ControllerHelper {
         commands.put("subscribe", new CommandSubscribe());
         commands.put("getUserPeriodicals", new CommandGetUserPeriodicals());
         commands.put("createPeriodical", new CommandCreatePeriodical());
+        commands.put("updatePeriodical", new CommandUpdatePeriodical());
         commands.put("getCatalog", new CommandGetCatalog());
     }
 

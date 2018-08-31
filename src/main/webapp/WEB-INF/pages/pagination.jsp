@@ -18,7 +18,7 @@
     <fmt:setBundle basename="message"/>
 </head>
 <body>
-<form name="catalogForm" action="getCatalog" method="post">
+<form name="catalogForm" action="catalog" method="post">
     <input type="hidden" name="command" value="getCatalog"/>
     <input type="hidden" name="currentPage" value="1"/>
     <input type="hidden" name="recordsPerPage" value="4"/>

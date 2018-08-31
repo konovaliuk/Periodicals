@@ -22,6 +22,8 @@ public class PeriodicalTypeDAO extends AbstractDAO implements IPeriodicalType {
 
     private final String UPDATE_TYPE = "UPDATE periodical_type SET periodical_type.type = ? WHERE periodical_type.id = ?";
 
+    private final String DELETE_PERIODICAL_TYPE = "DELETE FROM periodical_type WHERE periodical_type.id = ?";
+
     private PeriodicalTypeDAO() {
     }
 
@@ -78,19 +80,18 @@ public class PeriodicalTypeDAO extends AbstractDAO implements IPeriodicalType {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_TYPE)) {
             statement.setString(1, type.getType());
-            if (statement.executeUpdate() != 0) {
-                return true;
-            }
+            statement.executeUpdate();
         }
-        return false;
+        return true;
     }
 
     @Override
     public boolean deleteType(PeriodicalType type) throws SQLException {
-        String query = "DELETE FROM periodical_type WHERE periodical_type.id = " + type.getId();
-        if (execute(query) != 0) {
-            return true;
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_PERIODICAL_TYPE)) {
+            statement.setInt(1, type.getId());
+            statement.executeUpdate();
         }
-        return false;
+        return true;
     }
 }

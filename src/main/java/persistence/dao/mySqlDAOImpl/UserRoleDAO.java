@@ -21,6 +21,8 @@ public class UserRoleDAO extends AbstractDAO implements IUserRole {
 
     private final String UPDATE_USER_ROLE = "UPDATE user_role SET user_role.role = ? WHERE user_role.id = ?";
 
+    private final String DELETE_USER_ROLE = "DELETE FROM user_role WHERE user_role.id = ?";
+
     private UserRoleDAO() {
     }
 
@@ -62,13 +64,10 @@ public class UserRoleDAO extends AbstractDAO implements IUserRole {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_USER_ROLE, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, role.getRole());
-            if (statement.executeUpdate() != 0) {
-                role.setId(getGeneratedKey(statement));
-                return true;
-            }
-
+            statement.executeUpdate();
+            role.setId(getGeneratedKey(statement));
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -76,20 +75,19 @@ public class UserRoleDAO extends AbstractDAO implements IUserRole {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_USER_ROLE)) {
             statement.setString(1, role.getRole());
-            if (statement.executeUpdate() != 0) {
-                return true;
-            }
+            statement.executeUpdate();
         }
-        return false;
+        return true;
     }
 
     @Override
     public boolean deleteRole(UserRole role) throws SQLException {
-        String query = "DELETE FROM user_role WHERE user_role.id = " + role.getId();
-        if (execute(query) != 0) {
-            return true;
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_USER_ROLE)) {
+            statement.setInt(1, role.getId());
+            statement.executeUpdate();
         }
-        return false;
+        return true;
     }
 }
 
