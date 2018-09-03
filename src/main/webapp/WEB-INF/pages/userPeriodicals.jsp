@@ -23,14 +23,14 @@
         <c:forEach var="item" items="${userPeriodicals}">
             <div class="type"><c:out value="${item.getPeriodicalType().getType()}"/></div>
             <div class="mainHeader">${item.getTitle()}</div>
-            <img src="../../css/images/book.jpg" alt="image">
+            <img src="../../images/book.jpg" alt="image">
             <p>Category: ${item.getCategory()}</p>
             <p>Price: ${item.getPrice()}</p>
             <p>Period: ${item.getPeriodicalPeriod().getPeriod()}</p>
             <p>
                 <span class="red">Description:</span> ${item.getDescription()}
             </p>
-            <a href="../../css/images/book.jpg"><p style="color: chocolate; font-style: italic"> Read</p></a>
+            <a href="../../images/book.jpg"><p style="color: chocolate; font-style: italic"> Read</p></a>
         </c:forEach>
     </ul>
 </div>

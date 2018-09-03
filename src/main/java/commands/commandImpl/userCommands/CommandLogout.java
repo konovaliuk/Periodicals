@@ -1,4 +1,4 @@
-package commands.commandImpl;
+package commands.commandImpl.userCommands;
 
 import commands.ICommand;
 import logging.LoggerLoader;

@@ -1,4 +1,4 @@
-package commands.commandImpl;
+package commands.commandImpl.subscriptionCommands;
 
 import commands.ICommand;
 import logging.LoggerLoader;
@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import persistence.entities.Account;
 import persistence.entities.Periodical;
 import persistence.entities.User;
+import service.PeriodicalService;
 import service.SubscriptionService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,11 +24,12 @@ public class CommandSubscribe implements ICommand {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
 
-        if (request.getSession().getAttribute("user") == null) {
+        /*if (request.getSession().getAttribute("user") == null) {
             return Config.getInstance().getProperty(Config.LOGIN);
-        }
+        }*/
         User user = (User) request.getSession().getAttribute("user");
-        Periodical periodical = (Periodical) request.getSession().getAttribute("periodical");
+        int periodicalId = Integer.valueOf(request.getParameter("periodicalId"));
+        Periodical periodical = PeriodicalService.getPeriodical(periodicalId);
         int term = Integer.valueOf(request.getParameter("term"));
         BigDecimal totalAmount;
         if (term != 0) {
@@ -41,7 +43,8 @@ public class CommandSubscribe implements ICommand {
             return Config.getInstance().getProperty(Config.PERIODICAL_INFO);
         }
         if (!SubscriptionService.subscribe(user, periodical, totalAmount, term)) {
-            return Config.getInstance().getProperty(Config.ERROR);
+            request.setAttribute("info", Info.getInstance().getProperty(Info.ERROR));
+            return Config.getInstance().getProperty(Config.PERIODICAL_INFO);
         }
         logger.info(user.getLogin() + " subscribed to " + periodical.getTitle());
         request.setAttribute("info", Info.getInstance().getProperty(Info.DONE));

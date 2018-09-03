@@ -101,7 +101,7 @@ public class PeriodicalDAO extends AbstractDAO implements IPeriodical {
     }
 
     @Override
-    public boolean insertPeriodical(Periodical periodical) throws SQLException {
+    public void insertPeriodical(Periodical periodical) throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_PERIODICAL, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, periodical.getTitle());
@@ -113,11 +113,10 @@ public class PeriodicalDAO extends AbstractDAO implements IPeriodical {
             statement.executeUpdate();
             periodical.setId(getGeneratedKey(statement));
         }
-        return true;
     }
 
     @Override
-    public boolean updatePeriodical(Periodical periodical) throws SQLException {
+    public void updatePeriodical(Periodical periodical) throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_PERIODICAL)) {
             statement.setString(1, periodical.getTitle());
@@ -129,17 +128,15 @@ public class PeriodicalDAO extends AbstractDAO implements IPeriodical {
             statement.setInt(7, periodical.getId());
             statement.executeUpdate();
         }
-        return true;
     }
 
     @Override
-    public boolean deletePeriodical(Periodical periodical) throws SQLException {
+    public void deletePeriodical(Periodical periodical) throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_PERIODICAL)) {
             statement.setInt(1, periodical.getId());
             statement.executeUpdate();
         }
-        return true;
     }
 
 }

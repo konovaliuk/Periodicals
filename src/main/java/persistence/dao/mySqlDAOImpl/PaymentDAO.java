@@ -64,33 +64,30 @@ public class PaymentDAO extends AbstractDAO implements IPayment {
     }
 
     @Override
-    public boolean insertPayment(Payment payment, Connection connection) throws SQLException {
+    public void insertPayment(Payment payment, Connection connection) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(INSERT_PAYMENT, Statement.RETURN_GENERATED_KEYS);
         statement.setTimestamp(1, payment.getDate());
         statement.setBigDecimal(2, payment.getAmount());
         statement.executeUpdate();
         payment.setId(getGeneratedKey(statement));
-        return true;
     }
 
     @Override
-    public boolean updatePayment(Payment payment) throws SQLException {
+    public void updatePayment(Payment payment) throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_PAYMENT)) {
             statement.setTimestamp(1, payment.getDate());
             statement.setBigDecimal(2, payment.getAmount());
             statement.executeUpdate();
         }
-        return true;
     }
 
     @Override
-    public boolean deletePayment(Payment payment) throws SQLException {
+    public void deletePayment(Payment payment) throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_PAYMENT)) {
             statement.setInt(1, payment.getId());
             statement.executeUpdate();
         }
-        return true;
     }
 }

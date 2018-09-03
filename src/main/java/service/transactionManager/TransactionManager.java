@@ -24,7 +24,7 @@ public abstract class TransactionManager {
             connection.setAutoCommit(true);
             connection.close();
         } catch (SQLException e) {
-            logger.error("Failed to close connection ",e);
+            logger.error("Failed to close connection ", e);
         }
     }
 }

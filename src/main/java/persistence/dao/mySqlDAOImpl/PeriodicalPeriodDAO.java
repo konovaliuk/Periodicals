@@ -84,38 +84,32 @@ public class PeriodicalPeriodDAO extends AbstractDAO implements IPeriodicalPerio
     }
 
     @Override
-    public boolean insertPeriod(PeriodicalPeriod period) throws SQLException {
+    public void insertPeriod(PeriodicalPeriod period) throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_PERIOD, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, period.getPeriod());
             statement.setInt(2, period.getTerm());
-            if (statement.executeUpdate() != 0) {
-                period.setId(getGeneratedKey(statement));
-                return true;
-            }
-
+            statement.executeUpdate();
+            period.setId(getGeneratedKey(statement));
         }
-        return false;
     }
 
     @Override
-    public boolean updatePeriod(PeriodicalPeriod period) throws SQLException {
+    public void updatePeriod(PeriodicalPeriod period) throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_PERIOD)) {
             statement.setString(1, period.getPeriod());
             statement.setInt(2, period.getTerm());
             statement.executeUpdate();
         }
-        return true;
     }
 
     @Override
-    public boolean deletePeriod(PeriodicalPeriod period) throws SQLException {
+    public void deletePeriod(PeriodicalPeriod period) throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_PERIODICAL_PERIOD)) {
             statement.setInt(1, period.getId());
             statement.executeUpdate();
         }
-        return true;
     }
 }

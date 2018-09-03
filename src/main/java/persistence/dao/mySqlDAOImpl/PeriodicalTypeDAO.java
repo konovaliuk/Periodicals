@@ -62,36 +62,30 @@ public class PeriodicalTypeDAO extends AbstractDAO implements IPeriodicalType {
     }
 
     @Override
-    public boolean insertType(PeriodicalType type) throws SQLException {
+    public void insertType(PeriodicalType type) throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_TYPE, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, type.getType());
-            if (statement.executeUpdate() != 0) {
-                type.setId(getGeneratedKey(statement));
-                return true;
-            }
-
+            statement.executeUpdate();
+            type.setId(getGeneratedKey(statement));
         }
-        return false;
     }
 
     @Override
-    public boolean updateType(PeriodicalType type) throws SQLException {
+    public void updateType(PeriodicalType type) throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_TYPE)) {
             statement.setString(1, type.getType());
             statement.executeUpdate();
         }
-        return true;
     }
 
     @Override
-    public boolean deleteType(PeriodicalType type) throws SQLException {
+    public void deleteType(PeriodicalType type) throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_PERIODICAL_TYPE)) {
             statement.setInt(1, type.getId());
             statement.executeUpdate();
         }
-        return true;
     }
 }

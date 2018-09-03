@@ -60,34 +60,31 @@ public class UserRoleDAO extends AbstractDAO implements IUserRole {
     }
 
     @Override
-    public boolean insertRole(UserRole role) throws SQLException {
+    public void insertRole(UserRole role) throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_USER_ROLE, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, role.getRole());
             statement.executeUpdate();
             role.setId(getGeneratedKey(statement));
         }
-        return true;
     }
 
     @Override
-    public boolean updateRole(UserRole role) throws SQLException {
+    public void updateRole(UserRole role) throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_USER_ROLE)) {
             statement.setString(1, role.getRole());
             statement.executeUpdate();
         }
-        return true;
     }
 
     @Override
-    public boolean deleteRole(UserRole role) throws SQLException {
+    public void deleteRole(UserRole role) throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_USER_ROLE)) {
             statement.setInt(1, role.getId());
             statement.executeUpdate();
         }
-        return true;
     }
 }
 

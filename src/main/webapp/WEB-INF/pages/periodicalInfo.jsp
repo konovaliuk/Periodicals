@@ -18,14 +18,13 @@
 </head>
 <body>
 
-<%--<c:set var="role" scope="session" value="${role}"/>--%>
 <jsp:include page="header.jsp"/>
 
 <div class="container">
-    <c:set var="item" scope="session" value="${periodical}"/>
+    <c:set var="item" value="${periodical}"/>
     <div class="type"><c:out value="${item.getPeriodicalType().getType()}"/></div>
     <div class="mainHeader">${item.getTitle()}</div>
-    <img src="../../css/images/book.jpg" alt="image">
+    <img src="../../images/book.jpg" alt="image">
     <p>Category: ${item.getCategory()}</p>
     <p>Price: ${item.getPrice()}</p>
     <p>Period: ${item.getPeriodicalPeriod().getPeriod()}</p>
@@ -34,17 +33,23 @@
     </p>
     <c:choose>
         <c:when test="${role=='admin'}">
-            <%--<form name="updateForm" action="updatePeriodical" method="post">--%>
-            <a href="updatePeriodical">Update Periodical</a>
-            <%--<input type="hidden" name="command" value="updatePeriodical" required>--%>
-            <%-- <div class="submitButton">
-                 <button type="submit">Update periodical</button>
-             </div>--%>
-
-            <%-- </form>--%>
+            <form name="updateForm" action="updatePeriodical" method="post">
+                <input type="hidden" name="command" value="getPage">
+                <div class="submitButton">
+                    <input type="hidden" name="periodicalId" value="${item.getId()}">
+                    <button type="submit">Update periodical</button>
+                </div>
+            </form>
+            <form name="deletePeriodical" action="deletePeriodical" method="post">
+                <input type="hidden" name="command" value="deletePeriodical">
+                <div class="submitButton">
+                    <input type="hidden" name="periodicalId" value="${item.getId()}">
+                    <button type="submit">Delete periodical</button>
+                </div>
+            </form>
         </c:when>
         <c:when test="${isSubscribe=='true'}">
-            <a href="../../css/images/book.jpg"><p style="color: chocolate; font-style: italic"> Read</p></a>
+            <a href="../../images/book.jpg"><p style="color: chocolate; font-style: italic"> Read</p></a>
         </c:when>
         <c:otherwise>
             <form name="subscribeForm" action="subscribe" method="post">
@@ -68,6 +73,7 @@
                 </select>
                 <input type="hidden" name="command" value="subscribe" required>
                 <div class="submitButton">
+                    <input type="hidden" name="periodicalId" value="${item.getId()}">
                     <button type="submit">Subscribe</button>
                 </div>
             </form>

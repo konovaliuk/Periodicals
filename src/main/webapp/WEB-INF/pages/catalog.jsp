@@ -24,7 +24,7 @@
                 <a href="Controller?command=periodicalInfo&id=${item.getId()}">
                     <div class="type"><c:out value="${item.getPeriodicalType().getType()}"/></div>
                     <div class="mainHeader">${item.getTitle()}</div>
-                    <img src="../../css/images/book.jpg" alt="image">
+                    <img src="../../images/book.jpg" alt="image">
                     <p>Category: ${item.getCategory()}</p>
                     <p>Price: ${item.getPrice()}</p>
                     <p>Period: ${item.getPeriodicalPeriod().getPeriod()}</p>
@@ -39,7 +39,7 @@
         <a href="Controller?command=getCatalog&recordsPerPage=${recordsPerPage}&currentPage=${currentPage-1}">&laquo;</a>
     </c:if>
 
-    <c:forEach begin="1" end="${noOfPages}" var="i">
+    <c:forEach begin="1" end="${numberOfPages}" var="i">
         <c:choose>
             <c:when test="${currentPage eq i}">
                 <a class="active">${i}</a>
@@ -49,7 +49,7 @@
             </c:otherwise>
         </c:choose>
     </c:forEach>
-    <c:if test="${currentPage lt noOfPages}">
+    <c:if test="${currentPage lt numberOfPages}">
         <a href="Controller?command=getCatalog&recordsPerPage=${recordsPerPage}&currentPage=${currentPage+1}">&raquo;</a>
     </c:if>
 </div>

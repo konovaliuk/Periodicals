@@ -1,4 +1,4 @@
-package commands.commandImpl;
+package commands.commandImpl.userCommands;
 
 import commands.ICommand;
 import logging.LoggerLoader;
@@ -18,17 +18,12 @@ import javax.servlet.http.HttpServletResponse;
 public class CommandRegister implements ICommand {
     private Logger logger = LoggerLoader.getLogger(CommandRegister.class);
 
-    private static final String NAME = "name";
-    private static final String LOGIN = "login";
-    private static final String PASSWORD = "password";
-    private static final String CONFIRM_PASSWORD = "confirmPassword";
-
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        String name = request.getParameter(NAME);
-        String login = request.getParameter(LOGIN);
-        String password = request.getParameter(PASSWORD);
-        String confirmPassword = request.getParameter(CONFIRM_PASSWORD);
+        String name = request.getParameter("name");
+        String login = request.getParameter("login");
+        String password = request.getParameter( "password");
+        String confirmPassword = request.getParameter("confirmPassword");
 
         if (!password.equals(confirmPassword)) {
             request.setAttribute("error", Info.getInstance().getProperty(Info.INCORRECT_PASSWORD));

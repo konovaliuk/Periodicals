@@ -31,23 +31,20 @@ public interface IPayment {
      *
      * @param payment    - payment to be inserted to the database
      * @param connection - connection with setAutoCommit(false)
-     * @return - {@code true} if new payment id added, {@code false} if no records is inserted
      */
-    boolean insertPayment(Payment payment, Connection connection) throws SQLException;
+    void insertPayment(Payment payment, Connection connection) throws SQLException;
 
     /**
      * Update payment info
      *
      * @param payment    - payment info to be updated in the database
-     * @return - {@code true} if payment info is updated, {@code false} if no records is updated
      */
-    boolean updatePayment(Payment payment) throws SQLException;
+    void updatePayment(Payment payment) throws SQLException;
 
     /**
      * Delete payment
      *
      * @param payment - payment to be deleted from the database
-     * @return - {@code true} if payment is deleted, {@code false} if no records is deleted
      */
-    boolean deletePayment(Payment payment) throws SQLException;
+    void deletePayment(Payment payment) throws SQLException;
 }

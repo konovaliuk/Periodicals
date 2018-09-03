@@ -29,24 +29,21 @@ public interface IAccount {
      * Insert new account
      *
      * @param account - account to be inserted to the database
-     * @return - {@code true} if new account id added, {@code false} if no records is inserted
      */
-    boolean insertAccount(Account account) throws SQLException;
+    void insertAccount(Account account,Connection connection) throws SQLException;
 
     /**
      * Update account info
      *
      * @param account    - account info to be updated in the database
      * @param connection - connection with setAutoCommit(false)
-     * @return - {@code true} if account info is updated, {@code false} if no records is updated
      */
-    boolean updateAccount(Account account, Connection connection) throws SQLException;
+    void updateAccount(Account account, Connection connection) throws SQLException;
 
     /**
      * Delete account
      *
      * @param account - account to be deleted from the database
-     * @return - {@code true} if account is deleted, {@code false} if no records is deleted
      */
-    boolean deleteAccount(Account account) throws SQLException;
+    void deleteAccount(Account account) throws SQLException;
 }

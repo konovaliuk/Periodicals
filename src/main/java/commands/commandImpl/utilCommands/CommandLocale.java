@@ -1,4 +1,4 @@
-package commands.commandImpl;
+package commands.commandImpl.utilCommands;
 
 import commands.ICommand;
 import manager.Config;

@@ -19,11 +19,11 @@ import java.sql.SQLException;
 public class SubscribeManager extends TransactionManager {
     private static final Logger logger = LoggerLoader.getLogger(SubscribeManager.class);
     private MySqlDAOFactory mySqlDAOFactory = DAOFactory.getMySqlDAOFactory();
-    private IAccount iAccount = mySqlDAOFactory.getAccountDAO();
-    private IPayment iPayment = mySqlDAOFactory.getPaymentDAO();
-    private ISubscription iSubscription = mySqlDAOFactory.getSubscriptionDAO();
 
     public boolean subscribe(Subscription subscription) {
+        IAccount iAccount = mySqlDAOFactory.getAccountDAO();
+        IPayment iPayment = mySqlDAOFactory.getPaymentDAO();
+        ISubscription iSubscription = mySqlDAOFactory.getSubscriptionDAO();
         Connection connection = null;
         try {
             connection = getConnection();

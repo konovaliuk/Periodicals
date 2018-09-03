@@ -1,8 +1,17 @@
 package servlet;
 
 
-import commands.commandImpl.*;
 import commands.ICommand;
+import commands.commandImpl.periodicalCommands.*;
+import commands.commandImpl.subscriptionCommands.CommandSubscriptionsInfo;
+import commands.commandImpl.subscriptionCommands.CommandSubscribe;
+import commands.commandImpl.userCommands.CommandUserPeriodicals;
+import commands.commandImpl.userCommands.CommandLogin;
+import commands.commandImpl.userCommands.CommandLogout;
+import commands.commandImpl.userCommands.CommandRegister;
+import commands.commandImpl.utilCommands.CommandGetPage;
+import commands.commandImpl.utilCommands.CommandLocale;
+import commands.commandImpl.utilCommands.CommandMissing;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -15,17 +24,24 @@ public class ControllerHelper {
     private HashMap<String, ICommand> commands = new HashMap<>();
 
     private ControllerHelper() {
-        commands.put("register", new CommandRegister());
         commands.put("login", new CommandLogin());
-        commands.put("missing", new CommandMissing());
-        commands.put("locale", new CommandLocale());
         commands.put("logout", new CommandLogout());
-        commands.put("periodicalInfo", new CommandPeriodicalInfo());
-        commands.put("subscribe", new CommandSubscribe());
-        commands.put("getUserPeriodicals", new CommandGetUserPeriodicals());
+        commands.put("register", new CommandRegister());
+        commands.put("getUserPeriodicals", new CommandUserPeriodicals());
+
         commands.put("createPeriodical", new CommandCreatePeriodical());
-        commands.put("updatePeriodical", new CommandUpdatePeriodical());
+        commands.put("deletePeriodical", new CommandDeletePeriodical());
         commands.put("getCatalog", new CommandGetCatalog());
+        commands.put("periodicalInfo", new CommandPeriodicalInfo());
+        commands.put("updatePeriodical", new CommandUpdatePeriodical());
+
+        commands.put("subscribe", new CommandSubscribe());
+        commands.put("subscriptionsInfo", new CommandSubscriptionsInfo());
+
+        commands.put("getPage", new CommandGetPage());
+        commands.put("locale", new CommandLocale());
+        commands.put("missing", new CommandMissing());
+
     }
 
     public static ControllerHelper getInstance() {

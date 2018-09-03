@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 public class SubscriptionDAO extends AbstractDAO implements ISubscription {
 
-    DAOFactory daoFactory = new MySqlDAOFactory();
+    private DAOFactory daoFactory = new MySqlDAOFactory();
 
     private static SubscriptionDAO subscriptionDAO;
 
@@ -75,6 +75,26 @@ public class SubscriptionDAO extends AbstractDAO implements ISubscription {
     }
 
     @Override
+    public ArrayList<Subscription> findSubscriptionsByPeriodical(int id) throws SQLException {
+        ArrayList<Subscription> subscriptions = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement()) {
+            try (ResultSet resultSet = statement.executeQuery(SELECT_ALL_FROM_SUBSCRIPTION +
+                    "WHERE subscription.periodical_id = " + id)) {
+                while (resultSet.next()) {
+                    Subscription subscription = new Subscription(resultSet.getInt("id"),
+                            daoFactory.getUserDAO().findUserById(resultSet.getInt("user_id")),
+                            daoFactory.getPeriodicalDAO().findPeriodicalById(resultSet.getInt("periodical_id")),
+                            daoFactory.getPaymentDAO().findPaymentById(resultSet.getInt("payment_id")),
+                            resultSet.getTimestamp("expiration_date"));
+                    subscriptions.add(subscription);
+                }
+            }
+        }
+        return subscriptions;
+    }
+
+    @Override
     public ArrayList<Subscription> getAllSubscription() throws SQLException {
         ArrayList<Subscription> subscriptions = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();
@@ -94,37 +114,35 @@ public class SubscriptionDAO extends AbstractDAO implements ISubscription {
     }
 
     @Override
-    public boolean insertSubscription(Subscription subscription, Connection connection) throws SQLException {
+    public void insertSubscription(Subscription subscription, Connection connection) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(INSERT_SUBSCRIPTION, Statement.RETURN_GENERATED_KEYS);
         statement.setInt(1, subscription.getUser().getId());
         statement.setInt(2, subscription.getPeriodical().getId());
         statement.setInt(3, subscription.getPayment().getId());
-        statement.setTimestamp(4, subscription.getExpiration_date());
+        statement.setTimestamp(4, subscription.getExpirationDate());
         statement.executeUpdate();
-        return true;
+        subscription.setId(getGeneratedKey(statement));
     }
 
     @Override
-    public boolean updateSubscription(Subscription subscription) throws SQLException {
+    public void updateSubscription(Subscription subscription) throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_SUBSCRIPTION)) {
             statement.setInt(1, subscription.getUser().getId());
             statement.setInt(2, subscription.getPeriodical().getId());
             statement.setInt(3, subscription.getPayment().getId());
-            statement.setTimestamp(4, subscription.getExpiration_date());
+            statement.setTimestamp(4, subscription.getExpirationDate());
             statement.executeUpdate();
         }
-        return true;
     }
 
     @Override
-    public boolean deleteSubscription(Subscription subscription) throws SQLException {
+    public void deleteSubscription(Subscription subscription) throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_SUBSCRIPTION)) {
             statement.setInt(1, subscription.getId());
             statement.executeUpdate();
         }
-        return true;
     }
 
 }

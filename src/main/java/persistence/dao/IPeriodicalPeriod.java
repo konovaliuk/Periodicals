@@ -36,24 +36,21 @@ public interface IPeriodicalPeriod {
      * Insert new period
      *
      * @param period - period to be inserted to the database
-     * @return - {@code true} if new period id added, {@code false} if no records is inserted
      */
-    boolean insertPeriod(PeriodicalPeriod period) throws SQLException;
+    void insertPeriod(PeriodicalPeriod period) throws SQLException;
 
     /**
      * Update period info
      *
      * @param period - period info to be updated in the database
-     * @return - {@code true} if period info is updated, {@code false} if no records is updated
      */
-    boolean updatePeriod(PeriodicalPeriod period) throws SQLException;
+    void updatePeriod(PeriodicalPeriod period) throws SQLException;
 
     /**
      * Delete period
      *
      * @param period - period to be deleted from the database
-     * @return - {@code true} if period is deleted, {@code false} if no records is deleted
      */
-    boolean deletePeriod(PeriodicalPeriod period) throws SQLException;
+    void deletePeriod(PeriodicalPeriod period) throws SQLException;
 
 }

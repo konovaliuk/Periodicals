@@ -12,7 +12,7 @@
 </head>
 <body>
 <jsp:include page="header.jsp"/>
-<form name="updatePeriodicalForm" action="updatePeriodical" method="post">
+<form name="updatePeriodicalPageForm" action="updatePeriodical" method="post">
     <input type="hidden" name="command" value="updatePeriodical">
     <div class="formContainer">
         <label><b>Title</b></label>

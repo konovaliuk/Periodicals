@@ -19,7 +19,21 @@ public interface ISubscription {
      */
     Subscription findSubscriptionById(int id) throws SQLException;
 
-    public ArrayList<Subscription> findSubscriptionsByUser(int id) throws SQLException;
+    /**
+     * subscription's selection by user id
+     *
+     * @param id - user id
+     * @return - list of subscriptions
+     */
+    ArrayList<Subscription> findSubscriptionsByUser(int id) throws SQLException;
+
+    /**
+     * subscription's selection by periodical id
+     *
+     * @param id - periodical id
+     * @return - list of subscriptions
+     */
+    ArrayList<Subscription> findSubscriptionsByPeriodical(int id) throws SQLException;
 
     /**
      * Selection all subscriptions in the database
@@ -32,24 +46,21 @@ public interface ISubscription {
      * Insert new subscription
      *
      * @param subscription - subscription to be inserted to the database
-     * @param connection - connection with setAutoCommit(false)
-     * @return - {@code true} if new subscription id added, {@code false} if no records is inserted
+     * @param connection   - connection with setAutoCommit(false)
      */
-    boolean insertSubscription(Subscription subscription, Connection connection) throws SQLException;
+    void insertSubscription(Subscription subscription, Connection connection) throws SQLException;
 
     /**
      * Update subscription info
      *
      * @param subscription - subscription info to be updated in the database
-     * @return - {@code true} if subscription info is updated, {@code false} if no records is updated
      */
-    boolean updateSubscription(Subscription subscription) throws SQLException;
+    void updateSubscription(Subscription subscription) throws SQLException;
 
     /**
      * Delete subscription
      *
      * @param subscription - subscription to be deleted from the database
-     * @return - {@code true} if subscription is deleted, {@code false} if no records is deleted
      */
-    boolean deleteSubscription(Subscription subscription) throws SQLException;
+    void deleteSubscription(Subscription subscription) throws SQLException;
 }

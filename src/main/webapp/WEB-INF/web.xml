@@ -9,7 +9,7 @@
     <display-name>Archetype Created Web Application</display-name>
 
     <resource-ref>
-        <description>DB Connection</description>
+        <description>MySql DB Connection Pool</description>
         <res-ref-name>jdbc/periodicals</res-ref-name>
         <res-type>javax.sql.DataSource</res-type>
         <res-auth>Container</res-auth>
@@ -19,7 +19,6 @@
         <servlet-name>Controller</servlet-name>
         <servlet-class>servlet.Controller</servlet-class>
     </servlet>
-
 
 
     <servlet-mapping>
@@ -33,6 +32,9 @@
         <url-pattern>/subscribe</url-pattern>
         <url-pattern>/createPeriodical</url-pattern>
         <url-pattern>/updatePeriodical</url-pattern>
+        <url-pattern>/deletePeriodical</url-pattern>
+        <url-pattern>/subscriptionsInfo</url-pattern>
+        <url-pattern>/userPeriodicals</url-pattern>
         <url-pattern>/catalog</url-pattern>
     </servlet-mapping>
 
@@ -58,9 +60,9 @@
     </filter-mapping>
 
     <error-page>
-        <location>/css/images/error.png</location>
+        <location>/images/error.png</location>
     </error-page>
-    
+
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>

@@ -90,6 +90,7 @@ Header style
     border-radius: 4px;
 }
 
+
 .header a.logo {
     font-size: 25px;
     font-weight: bold;
@@ -136,6 +137,18 @@ Header style
     text-decoration: none;
 }
 
+.navbar input {
+    background: transparent;
+    border: 0;
+    float: left;
+    font-size: 16px;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+
 .dropdown {
     float: left;
     overflow: hidden;
@@ -152,8 +165,8 @@ Header style
     margin: 0;
 }
 
-.navbar a:hover, .dropdown:hover .dropbtn {
-    background-color: red;
+.navbar form, a:hover, .dropdown:hover .dropbtn  {
+    background-color: #555555;
 }
 
 .dropdown-content {
@@ -185,9 +198,10 @@ Header style
 /*
 Login style
 */
-form {
+
+/*form {
     border: 3px solid #f1f1f1;
-}
+}*/
 
 input[type=text], input[type=password], input[type=number] {
     width: 100%;
@@ -395,3 +409,20 @@ span.dropcaps {
 }
 
 .pagination a:hover:not(.active) {background-color: #ddd;}
+
+/*Table*/
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 50%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}

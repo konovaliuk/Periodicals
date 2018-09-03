@@ -1,4 +1,4 @@
-package commands.commandImpl;
+package commands.commandImpl.periodicalCommands;
 
 import commands.ICommand;
 import manager.Config;
@@ -19,17 +19,15 @@ public class CommandGetCatalog implements ICommand {
         int currentPage = Integer.valueOf(request.getParameter("currentPage"));
         int recordsPerPage = Integer.valueOf(request.getParameter("recordsPerPage"));
 
-
-        ArrayList<Periodical> periodicals = PeriodicalService.getPeriodicals(currentPage,recordsPerPage);
+        ArrayList<Periodical> periodicals = PeriodicalService.getAllPeriodicals(currentPage, recordsPerPage);
         request.setAttribute("periodicals", periodicals);
 
         int rows = PeriodicalService.getNumberOfRows();
-        int nOfPages = (int)Math.ceil((double) rows / (double) recordsPerPage);
+        int nOfPages = (int) Math.ceil((double) rows / (double) recordsPerPage);
 
-        request.setAttribute("noOfPages", nOfPages);
+        request.setAttribute("numberOfPages", nOfPages);
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("recordsPerPage", recordsPerPage);
-        request.getSession().setAttribute("load", "true");
         return Config.getInstance().getProperty(Config.CATALOG);
     }
 }

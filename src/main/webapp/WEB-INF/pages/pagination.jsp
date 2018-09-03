@@ -26,27 +26,5 @@
         <button type="submit">Show catalog</button>
     </div>
 </form>
-<%--<c:if test="${empty load}">
-    <catalog:getCatalog/>
-</c:if>
-<div class="container">
-    <div class="head">
-        <h1><fmt:message key="periodicals"/></h1>
-    </div>
-    <ul>
-        <c:forEach var="item" items="${periodicals}">
-            <li>
-                <a href="Controller?command=periodicalInfo&id=${item.getId()}">
-                    <div class="type"><c:out value="${item.getPeriodicalType().getType()}"/></div>
-                    <div class="mainHeader">${item.getTitle()}</div>
-                    <img src="../../css/images/book.jpg" alt="image">
-                    <p>Category: ${item.getCategory()}</p>
-                    <p>Price: ${item.getPrice()}</p>
-                    <p>Period: ${item.getPeriodicalPeriod().getPeriod()}</p>
-                    <p style="color: chocolate; font-style: italic"> Details</p></a>
-            </li>
-        </c:forEach>
-    </ul>
-</div>--%>
 </body>
 </html>

@@ -1,5 +1,4 @@
-package commands.commandImpl;
-
+package commands.commandImpl.userCommands;
 
 import commands.ICommand;
 import logging.LoggerLoader;
@@ -28,6 +27,7 @@ public class CommandLogin implements ICommand {
             request.setAttribute("error", Info.getInstance().getProperty(Info.LOGIN_ERROR));
             return Config.getInstance().getProperty(Config.LOGIN);
         }
+        user.setPassword(null);
         request.getSession().setAttribute("user", user);
         logger.info("Sign in user " + user.getLogin());
         return Config.getInstance().getProperty(Config.HOME);

@@ -2,6 +2,7 @@ package persistence.dao;
 
 import persistence.entities.User;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
@@ -30,24 +31,21 @@ public interface IUser {
      * Insert new user
      *
      * @param user - user to be inserted to the database
-     * @return - {@code true} if new user id added, {@code false} if no records is inserted
      */
-    boolean insertUser(User user) throws SQLException;
+    void insertUser(User user, Connection connection) throws SQLException;
 
     /**
      * Update user info
      *
      * @param user - user info to be updated in the database
-     * @return - {@code true} if user info is updated, {@code false} if no records is updated
      */
-    boolean updateUser(User user) throws SQLException;
+    void updateUser(User user) throws SQLException;
 
     /**
      * Delete user
      *
      * @param user - user to be deleted from the database
-     * @return - {@code true} if user is deleted, {@code false} if no records is deleted
      */
-    boolean deleteUser(User user) throws SQLException;
+    void deleteUser(User user) throws SQLException;
 
 }

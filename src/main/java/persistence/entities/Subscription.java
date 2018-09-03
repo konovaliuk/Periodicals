@@ -14,64 +14,64 @@ public class Subscription implements Serializable {
     private User user;
     private Periodical periodical;
     private Payment payment;
-    private Timestamp expiration_date;
+    private Timestamp expirationDate;
 
     public Subscription() {
     }
 
-    public Subscription(int id, User user, Periodical periodical, Payment payment, Timestamp expiration_date) {
+    public Subscription(int id, User user, Periodical periodical, Payment payment, Timestamp expirationDate) {
         this.id = id;
         this.user = user;
         this.periodical = periodical;
         this.payment = payment;
-        this.expiration_date = expiration_date;
+        this.expirationDate = expirationDate;
     }
 
-    public Subscription(User user, Periodical periodical, Payment payment, Timestamp expiration_date) {
+    public Subscription(User user, Periodical periodical, Payment payment, Timestamp expirationDate) {
         this.user = user;
         this.periodical = periodical;
         this.payment = payment;
-        this.expiration_date = expiration_date;
+        this.expirationDate = expirationDate;
     }
 
     public int getId() {
         return id;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public Periodical getPeriodical() {
-        return periodical;
-    }
-
-    public Payment getPayment() {
-        return payment;
-    }
-
-    public Timestamp getExpiration_date() {
-        return expiration_date;
-    }
-
     public void setId(int id) {
         this.id = id;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     public void setUser(User user) {
         this.user = user;
     }
 
+    public Periodical getPeriodical() {
+        return periodical;
+    }
+
     public void setPeriodical(Periodical periodical) {
         this.periodical = periodical;
+    }
+
+    public Payment getPayment() {
+        return payment;
     }
 
     public void setPayment(Payment payment) {
         this.payment = payment;
     }
 
-    public void setExpiration_date(Timestamp expiration_date) {
-        this.expiration_date = expiration_date;
+    public Timestamp getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(Timestamp expirationDate) {
+        this.expirationDate = expirationDate;
     }
 
     @Override
@@ -83,12 +83,12 @@ public class Subscription implements Serializable {
                 Objects.equals(user, that.user) &&
                 Objects.equals(periodical, that.periodical) &&
                 Objects.equals(payment, that.payment) &&
-                Objects.equals(expiration_date, that.expiration_date);
+                Objects.equals(expirationDate, that.expirationDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user, periodical, payment, expiration_date);
+        return Objects.hash(id, user, periodical, payment, expirationDate);
     }
 
     @Override
@@ -98,7 +98,7 @@ public class Subscription implements Serializable {
                 ", user=" + user +
                 ", periodical=" + periodical +
                 ", payment=" + payment +
-                ", expiration_date=" + expiration_date +
+                ", expirationDate=" + expirationDate +
                 '}';
     }
 }
