@@ -21,9 +21,9 @@
 <body>
 <table>
     <tr>
-        <th>Periodical</th>
-        <th>User</th>
-        <th>Expiration date</th>
+        <th><fmt:message key="periodical"/></th>
+        <th><fmt:message key="user"/></th>
+        <th><fmt:message key="expiration_date"/></th>
     </tr>
     <c:forEach var="item" items="${subscriptions}">
     <tr>

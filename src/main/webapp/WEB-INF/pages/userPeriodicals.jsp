@@ -28,7 +28,7 @@
             <p>Price: ${item.getPrice()}</p>
             <p>Period: ${item.getPeriodicalPeriod().getPeriod()}</p>
             <p>
-                <span class="red">Description:</span> ${item.getDescription()}
+                <span class="red"><fmt:message key="description"/>:</span> ${item.getDescription()}
             </p>
             <a href="../../images/book.jpg"><p style="color: chocolate; font-style: italic"> Read</p></a>
         </c:forEach>

@@ -17,36 +17,36 @@
 <form name="createPeriodicalForm" action="createPeriodical" method="post">
     <input type="hidden" name="command" value="createPeriodical">
     <div class="formContainer">
-        <label><b>Title</b></label>
-        <input type="text" placeholder="Enter title" name="title" required>
+        <label><b><fmt:message key="title"/></b></label>
+        <input type="text"  name="title" required>
 
-        <label><b>Type</b></label>
+        <label><b><fmt:message key="type"/></b></label>
         <select name="type" required>
-            <option value="">Select type</option>
+            <option value=""><fmt:message key="select_type"/></option>
             <option value="newspaper">newspaper</option>
             <option value="journal">journal</option>
         </select>
 
-        <label><b>Period</b></label>
+        <label><b><fmt:message key="period"/></b></label>
         <select name="period" required>
-            <option value="">Select period</option>
+            <option value=""><fmt:message key="select_period"/></option>
             <option value="once a week">once a week</option>
             <option value="once a month">once a month</option>
             <option value="once a 3 month">once a 3 month</option>
             <option value="once a year">once a year</option>
         </select>
 
-        <label><b>Category</b></label>
-        <input type="text" placeholder="Enter category" name="category" required>
+        <label><b><fmt:message key="category"/></b></label>
+        <input type="text"  name="category" required>
 
-        <label><b>Price</b></label>
-        <input type="number" placeholder="Enter price" name="price" required min="1">
+        <label><b><fmt:message key="price"/></b></label>
+        <input type="number"  name="price" required min="1">
 
-        <label><b>Description</b></label>
-        <input type="text" placeholder="Enter description" name="description">
+        <label><b><fmt:message key="description"/></b></label>
+        <input type="text"  name="description">
 
         <div class="submitButton">
-            <button type="submit">Create</button>
+            <button type="submit"><fmt:message key="create"/></button>
         </div>
         <br/>
         <label style="color: brown">

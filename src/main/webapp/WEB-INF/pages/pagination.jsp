@@ -23,7 +23,7 @@
     <input type="hidden" name="currentPage" value="1"/>
     <input type="hidden" name="recordsPerPage" value="4"/>
     <div class="submitButton">
-        <button type="submit">Show catalog</button>
+        <button type="submit"><fmt:message key="show_catalog"/> </button>
     </div>
 </form>
 </body>

@@ -22,7 +22,7 @@
     <c:choose>
         <c:when test="${empty user}">
             <a href="login"><fmt:message key="sign_in"/></a>
-            <a href="register"><fmt:message key="registration"/></a>
+            <a href="register"><fmt:message key="sign_up"/></a>
         </c:when>
         <c:otherwise>
             <c:set var="role" scope="session" value="${user.getUserRole().getRole()}"/>
@@ -30,26 +30,24 @@
                 <c:when test="${role=='admin'}">
                     <form name="createPeriodicalPageForm" action="createPeriodical" method="post">
                         <input type="hidden" name="command" value="getPage">
-                        <input type="submit" value="Create periodical">
+                        <input type="submit" value="<fmt:message key="create_periodical"/>">
                     </form>
                     <form name="subscriptionsInfoForm" action="subscriptionsInfo" method="post">
                         <input type="hidden" name="command" value="subscriptionsInfo">
-                        <input type="submit" value="Info">
+                        <input type="submit" value="<fmt:message key="info"/>">
                     </form>
                 </c:when>
                 <c:otherwise>
-                    <%--<a href="Controller?command=getUserPeriodicals">My periodicals</a>--%>
                     <form name="userPeriodicalsForm" action="userPeriodicals" method="post">
                         <input type="hidden" name="command" value="getUserPeriodicals">
-                        <input type="submit" value="My periodicals">
+                        <input type="submit" value="<fmt:message key="my_periodicals"/>">
                     </form>
                 </c:otherwise>
             </c:choose>
             <form name="logoutForm" action="logout" method="post">
                 <input type="hidden" name="command" value="logout">
-                <input type="submit" value="Logout">
+                <input type="submit" value="<fmt:message key="sign_out"/>">
             </form>
-            <%-- <a href="Controller?command=logout"><fmt:message key="sign_out"/> </a>--%>
         </c:otherwise>
     </c:choose>
     <div class="locale">

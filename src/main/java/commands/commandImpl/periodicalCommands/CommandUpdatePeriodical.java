@@ -20,7 +20,7 @@ public class CommandUpdatePeriodical implements ICommand {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        int periodicalId = Integer.valueOf(request.getParameter("periodicalId"));
+        int periodicalId = ((Periodical) request.getSession().getAttribute("periodical")).getId();
         String title = request.getParameter("title");
         String type = request.getParameter("type");
         String period = request.getParameter("period");
@@ -35,7 +35,7 @@ public class CommandUpdatePeriodical implements ICommand {
         Periodical updatedPeriodical = PeriodicalService.getPeriodical(periodicalId);
         request.setAttribute("info", Info.getInstance().getProperty(Info.DONE));
         request.setAttribute("periodical", updatedPeriodical);
-        logger.info("Update periodical " + title);
+        logger.info("Updated periodical " + title);
         return Config.getInstance().getProperty(Config.UPDATE_PERIODICAL);
     }
 }

@@ -1,6 +1,8 @@
 package servlet;
 
 import commands.ICommand;
+import logging.LoggerLoader;
+import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,8 +16,9 @@ import java.io.IOException;
  */
 
 public class Controller extends HttpServlet {
+    private Logger logger = LoggerLoader.getLogger(Controller.class);
 
-    ControllerHelper controllerHelper = ControllerHelper.getInstance();
+    private ControllerHelper controllerHelper = ControllerHelper.getInstance();
 
     /**
      * Processes requests for both HTTP
@@ -24,20 +27,21 @@ public class Controller extends HttpServlet {
      *
      * @param request  servlet request
      * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException      if an I/O error occurs
      */
-    private void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    private void processRequest(HttpServletRequest request, HttpServletResponse response) {
         String page;
 
         ICommand command = controllerHelper.getCommand(request);
         page = command.execute(request, response);
-        if (page.equals("/index.jsp")) {
-            response.sendRedirect("/");
-        } else {
-            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(page);
-            dispatcher.forward(request, response);
+        try {
+            if (page.equals("/index.jsp")) {
+                response.sendRedirect("/");
+            } else {
+                RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(page);
+                dispatcher.forward(request, response);
+            }
+        } catch (ServletException | IOException e) {
+            logger.error(e.getMessage());
         }
     }
 

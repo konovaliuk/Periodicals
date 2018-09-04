@@ -23,18 +23,14 @@
     <input type="hidden" name="command" value="login">
     <div class="formContainer">
         <label><b><fmt:message key="login"/> </b></label>
-        <input type="text" placeholder="Enter Username" name="login" required>
+        <input type="text" placeholder="<fmt:message key="enter_login"/>" name="login" required>
 
         <label><b><fmt:message key="password"/></b></label>
-        <input type="password" placeholder="Enter Password" name="password" required>
+        <input type="password" placeholder="<fmt:message key="enter_password"/>" name="password" required>
 
         <div class="submitButton">
-            <button type="submit"><fmt:message key="login"/></button>
+            <button type="submit"><fmt:message key="sign_in"/></button>
         </div>
-
-        <label>
-            <input type="checkbox" checked="checked" name="remember"> Remember me
-        </label>
         <br/>
         <label style="color: brown">
         ${error}

@@ -21,14 +21,14 @@
     <ul>
         <c:forEach var="item" items="${periodicals}">
             <li>
-                <a href="Controller?command=periodicalInfo&id=${item.getId()}">
+                <a href="Controller?command=periodicalInfo&periodicalId=${item.getId()}">
                     <div class="type"><c:out value="${item.getPeriodicalType().getType()}"/></div>
                     <div class="mainHeader">${item.getTitle()}</div>
                     <img src="../../images/book.jpg" alt="image">
-                    <p>Category: ${item.getCategory()}</p>
-                    <p>Price: ${item.getPrice()}</p>
-                    <p>Period: ${item.getPeriodicalPeriod().getPeriod()}</p>
-                    <p style="color: chocolate; font-style: italic"> Details</p></a>
+                    <p><fmt:message key="category"/>: ${item.getCategory()}</p>
+                    <p><fmt:message key="price"/>: ${item.getPrice()}</p>
+                    <p><fmt:message key="period"/>: ${item.getPeriodicalPeriod().getPeriod()}</p>
+                    <p style="color: chocolate; font-style: italic"><fmt:message key="details"/></p></a>
             </li>
         </c:forEach>
     </ul>
