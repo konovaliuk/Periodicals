@@ -34,8 +34,7 @@ public class UserServiceTest {
     private MySqlDAOFactory mySqlDAOFactory;
     @Mock
     private IUserDAO iUser;
-    @Mock
-    private IUserRoleDAO iUserRole;
+
 
 
     private User user = new User();
@@ -79,21 +78,6 @@ public class UserServiceTest {
         assertNull(userService.login(user.getLogin(), ""));
     }
 
-    @Test
-    public void getUserRole() throws SQLException {
-
-        when(mySqlDAOFactory.getUserRoleDAO()).thenReturn(iUserRole);
-        when(iUserRole.findUserRoleByRole(user.getUserRole().getRole())).thenReturn(userRole);
-        assertNotNull(userService.getUserRole(user.getUserRole().getRole()));
-    }
-
-    @Test
-    public void getUserRoleFailed() throws SQLException {
-
-        when(mySqlDAOFactory.getUserRoleDAO()).thenReturn(iUserRole);
-        when(iUserRole.findUserRoleByRole(user.getUserRole().getRole())).thenThrow(new SQLException());
-        assertNull(userService.getUserRole(user.getUserRole().getRole()));
-    }
 
     @Test
     public void getUserByLogin() throws SQLException {

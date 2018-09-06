@@ -73,6 +73,26 @@ public class PeriodicalPeriodDAO extends AbstractDAO implements IPeriodicalPerio
     }
 
     @Override
+    public PeriodicalPeriod findPeriodicalPeriodByTerm(int term) throws SQLException {
+        PeriodicalPeriod periodicalPeriod = null;
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(SELECT_ALL_FROM_PERIODICAL_PERIOD + "WHERE periodical_period.term= ?")) {
+            statement.setInt(1, term);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    periodicalPeriod = new PeriodicalPeriod(resultSet.getInt("id"),
+                            resultSet.getString("period"),
+                            resultSet.getInt("term"));
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Failed to find periodical period by term ", e);
+            throw new SQLException();
+        }
+        return periodicalPeriod;
+    }
+
+    @Override
     public ArrayList<PeriodicalPeriod> findAllPeriods() throws SQLException {
         ArrayList<PeriodicalPeriod> periods = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();

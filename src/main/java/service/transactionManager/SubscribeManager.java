@@ -14,6 +14,7 @@ import java.sql.SQLException;
 
 
 /**
+ * SubscribeManager provides subscribe operation that surrounded by transaction
  * Created by Julia on 28.08.2018
  */
 public class SubscribeManager extends TransactionManager {

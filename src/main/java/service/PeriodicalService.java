@@ -17,6 +17,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
+ * PeriodicalService is responsible for periodical DTO
+ * Designed as singleton
  * Created by Julia on 15.08.2018
  */
 public class PeriodicalService {
@@ -35,6 +37,13 @@ public class PeriodicalService {
         return periodicalService;
     }
 
+
+    /**
+     * Finds periodical by id
+     *
+     * @param id periodical id
+     * @return periodical, if such periodical doesn't exist then null
+     */
     public Periodical getPeriodical(int id) {
         IPeriodicalDAO iPeriodicalDAO = mySqlDAOFactory.getPeriodicalDAO();
         try {
@@ -45,6 +54,13 @@ public class PeriodicalService {
         }
     }
 
+    /**
+     * Finds periodicals with a specified limit
+     *
+     * @param currentPage    number of current page
+     * @param recordsPerPage count of elements on one page
+     * @return ArrayList of periodicals, if table periodical is empty then null
+     */
     public ArrayList<Periodical> getAllPeriodicals(int currentPage, int recordsPerPage) {
         IPeriodicalDAO iPeriodicalDAO = mySqlDAOFactory.getPeriodicalDAO();
         int start = currentPage * recordsPerPage - recordsPerPage;
@@ -56,12 +72,35 @@ public class PeriodicalService {
         }
     }
 
-    public boolean createPeriodical(String title, String type, String period,
+    /**
+     * Creates periodical
+     *
+     * @param title       periodical title
+     * @param type        periodical type
+     * @param term        periodical term
+     * @param category    periodical category
+     * @param price       periodical price
+     * @param description periodical description
+     * @return true if new periodical is added, otherwise false
+     */
+    public boolean createPeriodical(String title, String type, int term,
                                     String category, BigDecimal price, String description) {
         IPeriodicalDAO iPeriodicalDAO = mySqlDAOFactory.getPeriodicalDAO();
 
-        PeriodicalType periodicalType = getType(type);
-        PeriodicalPeriod periodicalPeriod = getPeriod(period);
+        PeriodicalType periodicalType;
+        try {
+            periodicalType = getType(type);
+        } catch (SQLException e) {
+            logger.error("Failed to find type by periodical_type", e);
+            return false;
+        }
+        PeriodicalPeriod periodicalPeriod;
+        try {
+            periodicalPeriod = getPeriod(term);
+        } catch (SQLException e) {
+            logger.error("Failed to find period by periodical_period ", e);
+            return false;
+        }
         Periodical periodical = new Periodical(title, periodicalType, periodicalPeriod, category, price, description);
         try {
             iPeriodicalDAO.insertPeriodical(periodical);
@@ -72,12 +111,35 @@ public class PeriodicalService {
         }
     }
 
-    public boolean updatePeriodical(int id, String title, String type, String period,
+    /**
+     * Updates periodical
+     *
+     * @param title       periodical title
+     * @param type        periodical type
+     * @param term        periodical term
+     * @param category    periodical category
+     * @param price       periodical price
+     * @param description periodical description
+     * @return true if periodical is updated, otherwise false
+     */
+    public boolean updatePeriodical(int id, String title, String type, int term,
                                     String category, BigDecimal price, String description) {
         IPeriodicalDAO iPeriodicalDAO = mySqlDAOFactory.getPeriodicalDAO();
 
-        PeriodicalType periodicalType = getType(type);
-        PeriodicalPeriod periodicalPeriod = getPeriod(period);
+        PeriodicalType periodicalType;
+        try {
+            periodicalType = getType(type);
+        } catch (SQLException e) {
+            logger.error("Failed to find type by periodical_type", e);
+            return false;
+        }
+        PeriodicalPeriod periodicalPeriod;
+        try {
+            periodicalPeriod = getPeriod(term);
+        } catch (SQLException e) {
+            logger.error("Failed to find period by periodical_period ", e);
+            return false;
+        }
         Periodical periodical = new Periodical(id, title, periodicalType, periodicalPeriod, category, price, description);
         try {
             iPeriodicalDAO.updatePeriodical(periodical);
@@ -88,6 +150,12 @@ public class PeriodicalService {
         }
     }
 
+    /**
+     * Deletes periodical
+     *
+     * @param periodical periodical to delete
+     * @return true if periodical is deleted, otherwise false
+     */
     public boolean deletePeriodical(Periodical periodical) {
         IPeriodicalDAO iPeriodicalDAO = mySqlDAOFactory.getPeriodicalDAO();
 
@@ -110,6 +178,11 @@ public class PeriodicalService {
         }
     }
 
+    /**
+     * Return number of rows of periodical table
+     *
+     * @return number of rows if there are rows in the table periodic, otherwise 0
+     */
     public int getNumberOfRows() {
         IPeriodicalDAO iPeriodicalDAO = mySqlDAOFactory.getPeriodicalDAO();
         try {
@@ -120,26 +193,28 @@ public class PeriodicalService {
         }
     }
 
-    private PeriodicalType getType(String type) {
+    /**
+     * Returns periodical type
+     *
+     * @param type - periodical type
+     * @return periodicalType if such periodicalType exists, otherwise null
+     */
+    private PeriodicalType getType(String type) throws SQLException {
         IPeriodicalTypeDAO iPeriodicalTypeDAO = mySqlDAOFactory.getPeriodicalTypeDAO();
-        PeriodicalType periodicalType = null;
-        try {
-            periodicalType = iPeriodicalTypeDAO.findPeriodicalTypeByType(type);
-        } catch (SQLException e) {
-            logger.error("Failed to find type by periodical_type", e);
-        }
-        return periodicalType;
+        return iPeriodicalTypeDAO.findPeriodicalTypeByType(type);
     }
 
-    private PeriodicalPeriod getPeriod(String period) {
+    /**
+     * Returns periodical period
+     *
+     * @param term - periodical term
+     * @return periodicalPeriod if such periodicalPeriod exists, otherwise null
+     */
+    private PeriodicalPeriod getPeriod(int term) throws SQLException {
         IPeriodicalPeriodDAO iPeriodicalPeriodDAO = mySqlDAOFactory.getPeriodicalPeriodDAO();
-        PeriodicalPeriod periodicalPeriod = null;
-        try {
-            periodicalPeriod = iPeriodicalPeriodDAO.findPeriodicalPeriodByPeriod(period);
-        } catch (SQLException e) {
-            logger.error("Failed to find period by periodical_period", e);
-        }
-        return periodicalPeriod;
+    /*    PeriodicalPeriod periodicalPeriod = null;
+        periodicalPeriod = iPeriodicalPeriodDAO.findPeriodicalPeriodByTerm(term);*/
+        return iPeriodicalPeriodDAO.findPeriodicalPeriodByTerm(term);
     }
 
 }

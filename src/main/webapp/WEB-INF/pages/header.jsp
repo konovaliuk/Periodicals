@@ -56,7 +56,11 @@
         <a href="Controller?command=locale&locale=ru"><img src="../../images/ru.png"></a>
     </div>
 </div>
-
+<userInfo:getInfo/>
+<br>
+<jsp:useBean id="now" class="java.util.Date" />
+    <fmt:setLocale value="${locale}" />
+    <fmt:formatDate value="${now}" />
 <div class="head">
     <h1><fmt:message key="periodicals"/></h1>
 </div>

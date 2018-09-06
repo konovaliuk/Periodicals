@@ -14,6 +14,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
+ * RegisterManager provides register operation that surrounded by transaction
  * Created by Julia on 01.09.2018
  */
 public class RegisterManager extends TransactionManager {

@@ -29,12 +29,12 @@
         </select>
 
         <label><b><fmt:message key="period"/></b></label>
-        <select name="period">
-            <option selected>${periodical.getPeriodicalPeriod().getPeriod()}</option>
-            <option value="once a month"><fmt:message key="once_a_month"/></option>
-            <option value="once a 3 month"><fmt:message key="3_month"/></option>
-            <option value="once a 6 month"><fmt:message key="6_month"/></option>
-            <option value="once a year"><fmt:message key="year"/></option>
+        <select name="term">
+            <option selected>${periodical.getPeriodicalPeriod().getTerm()}</option>
+            <option value="1"><fmt:message key="once_a_month"/></option>
+            <option value="3"><fmt:message key="3_month"/></option>
+            <option value="6"><fmt:message key="6_month"/></option>
+            <option value="12"><fmt:message key="year"/></option>
         </select>
 
         <label><b><fmt:message key="category"/></b></label>

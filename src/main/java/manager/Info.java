@@ -12,7 +12,6 @@ public class Info {
     public static final String LOGIN_ERROR = "LOGIN_ERROR";
     public static final String INCORRECT_LOGIN = "INCORRECT_LOGIN";
     public static final String INCORRECT_PASSWORD = "INCORRECT_PASSWORD";
-    public static final String INCORRECT_DATA_TRY_AGAIN = "INCORRECT_DATA_TRY_AGAIN";
     public static final String YOU_DONT_HAVE_ENOUGH_MONEY = "YOU_DONT_HAVE_ENOUGH_MONEY";
     public static final String DONE = "DONE";
     public static final String ERROR = "ERROR";

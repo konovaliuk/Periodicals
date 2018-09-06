@@ -55,7 +55,7 @@ public class PeriodicalServiceTest {
     private Periodical periodical = new Periodical();
 
     private String type = "type";
-    private String period = "period";
+    private int term = 0;
 
 
     @Before
@@ -99,7 +99,7 @@ public class PeriodicalServiceTest {
         when(mySqlDAOFactory.getPeriodicalTypeDAO()).thenReturn(iPeriodicalTypeDAO);
         when(mySqlDAOFactory.getPeriodicalPeriodDAO()).thenReturn(iPeriodicalPeriodDAO);
         doNothing().when(iPeriodicalDAO).insertPeriodical(periodical);
-        assertTrue(periodicalService.createPeriodical(periodical.getTitle(), type, period, periodical.getCategory(), periodical.getPrice(), periodical.getDescription()));
+        assertTrue(periodicalService.createPeriodical(periodical.getTitle(), type, term, periodical.getCategory(), periodical.getPrice(), periodical.getDescription()));
     }
 
     @Test
@@ -108,7 +108,7 @@ public class PeriodicalServiceTest {
         when(mySqlDAOFactory.getPeriodicalTypeDAO()).thenReturn(iPeriodicalTypeDAO);
         when(mySqlDAOFactory.getPeriodicalPeriodDAO()).thenReturn(iPeriodicalPeriodDAO);
         doThrow(new SQLException()).when(iPeriodicalDAO).insertPeriodical(periodical);
-        assertFalse(periodicalService.createPeriodical(periodical.getTitle(), null, null, periodical.getCategory(), periodical.getPrice(), periodical.getDescription()));
+        assertFalse(periodicalService.createPeriodical(periodical.getTitle(), null, term, periodical.getCategory(), periodical.getPrice(), periodical.getDescription()));
     }
 
     @Test
@@ -117,7 +117,7 @@ public class PeriodicalServiceTest {
         when(mySqlDAOFactory.getPeriodicalTypeDAO()).thenReturn(iPeriodicalTypeDAO);
         when(mySqlDAOFactory.getPeriodicalPeriodDAO()).thenReturn(iPeriodicalPeriodDAO);
         doNothing().when(iPeriodicalDAO).updatePeriodical(periodical);
-        assertTrue(periodicalService.updatePeriodical(periodical.getId(), periodical.getTitle(), type, period, periodical.getCategory(), periodical.getPrice(), periodical.getDescription()));
+        assertTrue(periodicalService.updatePeriodical(periodical.getId(), periodical.getTitle(), type, term, periodical.getCategory(), periodical.getPrice(), periodical.getDescription()));
     }
 
     @Test
@@ -126,7 +126,7 @@ public class PeriodicalServiceTest {
         when(mySqlDAOFactory.getPeriodicalTypeDAO()).thenReturn(iPeriodicalTypeDAO);
         when(mySqlDAOFactory.getPeriodicalPeriodDAO()).thenReturn(iPeriodicalPeriodDAO);
         doThrow(new SQLException()).when(iPeriodicalDAO).updatePeriodical(periodical);
-        assertFalse(periodicalService.updatePeriodical(periodical.getId(), periodical.getTitle(), type, period, periodical.getCategory(), periodical.getPrice(), periodical.getDescription()));
+        assertFalse(periodicalService.updatePeriodical(periodical.getId(), periodical.getTitle(), type, term, periodical.getCategory(), periodical.getPrice(), periodical.getDescription()));
     }
 
     @Test

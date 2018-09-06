@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
+ * SubscriptionService is responsible for subscription DTO
+ * Designed as singleton
  * Created by Julia on 15.08.2018
  */
 public class SubscriptionService {
@@ -36,14 +38,29 @@ public class SubscriptionService {
         return subscriptionService;
     }
 
+    /**
+     * Subscribes
+     *
+     * @param user        user who wants to subscribe
+     * @param periodical  subscription periodical
+     * @param totalAmount calculated price
+     * @param term        subscription term
+     * @return true if subscription is success, otherwise false
+     */
     public boolean subscribe(User user, Periodical periodical, BigDecimal totalAmount, int term) {
         user.getAccount().setAmount(user.getAccount().getAmount().subtract(totalAmount));
         Payment payment = new Payment(new Timestamp(System.currentTimeMillis()), totalAmount);
         Timestamp expirationDate = getExpirationDate(payment.getDate(), term);
         Subscription subscription = new Subscription(user, periodical, payment, expirationDate);
-         return SubscribeManager.getInstance().subscribe(subscription);
+        return SubscribeManager.getInstance().subscribe(subscription);
     }
 
+    /**
+     * Returns the periodicals subscribed by the user
+     *
+     * @param user user
+     * @return ArrayList of periodicals, otherwise null
+     */
     public ArrayList<Periodical> getUserPeriodicals(User user) {
         ISubscriptionDAO iSubscriptionDAO = mySqlDAOFactory.getSubscriptionDAO();
         ArrayList<Subscription> subscriptions;
@@ -60,6 +77,12 @@ public class SubscriptionService {
         return periodicals;
     }
 
+    /**
+     * Returns subscriptions with given periodical
+     *
+     * @param periodical periodical
+     * @return ArrayList of subscriptions, otherwise null
+     */
     public ArrayList<Subscription> getSubscriptionsByPeriodical(Periodical periodical) {
         ISubscriptionDAO iSubscriptionDAO = mySqlDAOFactory.getSubscriptionDAO();
         try {
@@ -70,6 +93,11 @@ public class SubscriptionService {
         }
     }
 
+    /**
+     * Returns all subscriptions
+     *
+     * @return ArrayList of subscriptions, if table subscription is empty then null
+     */
     public ArrayList<Subscription> getAllSubscriptions() {
         ISubscriptionDAO iSubscriptionDAO = mySqlDAOFactory.getSubscriptionDAO();
         try {
@@ -80,6 +108,12 @@ public class SubscriptionService {
         }
     }
 
+    /**
+     * Deletes subscription
+     *
+     * @param subscription subscription to delete
+     * @return true if subscription is deleted, otherwise false
+     */
     public boolean deleteSubscription(Subscription subscription) {
         ISubscriptionDAO iSubscriptionDAO = mySqlDAOFactory.getSubscriptionDAO();
         try {
@@ -91,6 +125,13 @@ public class SubscriptionService {
         }
     }
 
+    /**
+     * Checks if user is subscribed to periodical
+     *
+     * @param user       user to check
+     * @param periodical periodical to check
+     * @return true if user is subscribed to periodical, otherwise false
+     */
     public boolean checkSubscription(User user, Periodical periodical) {
         ArrayList<Periodical> periodicals = getUserPeriodicals(user);
         if (periodicals != null) {
@@ -103,6 +144,13 @@ public class SubscriptionService {
         return false;
     }
 
+    /**
+     * Return expiration date of subscription
+     *
+     * @param subscriptionDate date of subscription
+     * @param term             term of subscription
+     * @return expirationDate of subscription
+     */
     private Timestamp getExpirationDate(Timestamp subscriptionDate, int term) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(subscriptionDate);

@@ -1,5 +1,6 @@
 package manager;
 
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 /**
@@ -19,6 +20,7 @@ public class Config {
     public static final String UPDATE_PERIODICAL = "UPDATE_PERIODICAL";
     public static final String CATALOG = "CATALOG";
     public static final String INFO = "INFO";
+
 
     public static Config getInstance() {
         if (config == null) {

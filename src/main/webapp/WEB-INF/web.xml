@@ -26,15 +26,15 @@
         <url-pattern>/Controller</url-pattern>
         <url-pattern>/login</url-pattern>
         <url-pattern>/register</url-pattern>
-        <url-pattern>/locale</url-pattern>
         <url-pattern>/logout</url-pattern>
-        <url-pattern>/periodicalInfo</url-pattern>
-        <url-pattern>/subscribe</url-pattern>
+        <url-pattern>/locale</url-pattern>
         <url-pattern>/createPeriodical</url-pattern>
         <url-pattern>/updatePeriodical</url-pattern>
         <url-pattern>/deletePeriodical</url-pattern>
+        <url-pattern>/periodicalInfo</url-pattern>
         <url-pattern>/subscriptionsInfo</url-pattern>
         <url-pattern>/userPeriodicals</url-pattern>
+        <url-pattern>/subscribe</url-pattern>
         <url-pattern>/catalog</url-pattern>
     </servlet-mapping>
 
@@ -46,6 +46,16 @@
     <filter-mapping>
         <filter-name>EncodingFilter</filter-name>
         <servlet-name>Controller</servlet-name>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>SubscribeFilter</filter-name>
+        <filter-class>filters.SubscribeFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>SubscribeFilter</filter-name>
+        <url-pattern>/subscribe</url-pattern>
     </filter-mapping>
 
     <filter>

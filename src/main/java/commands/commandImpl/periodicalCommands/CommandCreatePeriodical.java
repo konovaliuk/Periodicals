@@ -20,19 +20,19 @@ public class CommandCreatePeriodical implements ICommand {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        User user = (User) request.getSession().getAttribute("user");
+       /* User user = (User) request.getSession().getAttribute("user");
         if (user == null || !user.getUserRole().getRole().equals("admin")) {
             return Config.getInstance().getProperty(Config.LOGIN);
-        }
+        }*/
         String title = request.getParameter("title");
         String type = request.getParameter("type");
-        String period = request.getParameter("period");
+        int term = Integer.valueOf(request.getParameter("term"));
         String category = request.getParameter("category");
         BigDecimal price = new BigDecimal(request.getParameter("price"));
         String description = request.getParameter("description");
 
-        if (!PeriodicalService.getInstance().createPeriodical(title, type, period, category, price, description)) {
-            request.setAttribute("info", Info.getInstance().getProperty(Info.INCORRECT_DATA_TRY_AGAIN));
+        if (!PeriodicalService.getInstance().createPeriodical(title, type, term, category, price, description)) {
+            request.setAttribute("info", Info.getInstance().getProperty(Info.ERROR));
             return Config.getInstance().getProperty(Config.CREATE_PERIODICAL);
         }
         request.setAttribute("info", Info.getInstance().getProperty(Info.DONE));

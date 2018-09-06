@@ -24,12 +24,8 @@ public class CommandSubscribe implements ICommand {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
 
-        /*if (request.getSession().getAttribute("user") == null) {
-            return Config.getInstance().getProperty(Config.LOGIN);
-        }*/
         User user = (User) request.getSession().getAttribute("user");
-        int periodicalId = Integer.valueOf(request.getParameter("periodicalId"));
-        Periodical periodical = PeriodicalService.getInstance().getPeriodical(periodicalId);
+        Periodical periodical = (Periodical) request.getSession().getAttribute("periodical");
         int term = Integer.valueOf(request.getParameter("term"));
         BigDecimal totalAmount;
         if (term != 0) {

@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
+ *
  * Created by Julia on 09.08.2018
  */
 @FunctionalInterface

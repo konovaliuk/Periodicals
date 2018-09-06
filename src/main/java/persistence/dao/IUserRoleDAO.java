@@ -5,6 +5,7 @@ import persistence.entities.UserRole;
 import java.sql.SQLException;
 
 /**
+ * IUserRoleDAO interface provides methods for manipulation of user_role table
  * Created by Julia on 09.08.2018
  */
 public interface IUserRoleDAO {
@@ -14,6 +15,7 @@ public interface IUserRoleDAO {
      *
      * @param id - userRole id
      * @return - userRole or null
+     * @throws SQLException
      */
     UserRole findRoleById(int id) throws SQLException;
 
@@ -22,6 +24,7 @@ public interface IUserRoleDAO {
      *
      * @param role - userRole's role
      * @return - UserRole or null
+     * @throws SQLException
      */
     UserRole findUserRoleByRole(String role) throws SQLException;
 
@@ -29,6 +32,7 @@ public interface IUserRoleDAO {
      * Insert new role
      *
      * @param role - role to be inserted to the database
+     * @throws SQLException
      */
     void insertRole(UserRole role) throws SQLException;
 
@@ -36,6 +40,7 @@ public interface IUserRoleDAO {
      * Update role info
      *
      * @param role - role info to be updated in the database
+     * @throws SQLException
      */
     void updateRole(UserRole role) throws SQLException;
 
@@ -43,6 +48,7 @@ public interface IUserRoleDAO {
      * Delete role
      *
      * @param role - role to be deleted from the database
+     * @throws SQLException
      */
     void deleteRole(UserRole role) throws SQLException;
 

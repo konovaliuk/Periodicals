@@ -25,13 +25,13 @@ public class CommandUpdatePeriodical implements ICommand {
         int periodicalId = ((Periodical) request.getSession().getAttribute("periodical")).getId();
         String title = request.getParameter("title");
         String type = request.getParameter("type");
-        String period = request.getParameter("period");
+        int term = Integer.valueOf(request.getParameter("term"));
         String category = request.getParameter("category");
         BigDecimal price = new BigDecimal(request.getParameter("price"));
         String description = request.getParameter("description");
 
-        if (!periodicalService.updatePeriodical(periodicalId, title, type, period, category, price, description)) {
-            request.setAttribute("info", Info.getInstance().getProperty(Info.INCORRECT_DATA_TRY_AGAIN));
+        if (!periodicalService.updatePeriodical(periodicalId, title, type, term, category, price, description)) {
+            request.setAttribute("info", Info.getInstance().getProperty(Info.ERROR));
             return Config.getInstance().getProperty(Config.UPDATE_PERIODICAL);
         }
         Periodical updatedPeriodical = periodicalService.getPeriodical(periodicalId);

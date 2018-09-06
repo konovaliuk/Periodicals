@@ -30,7 +30,7 @@
         </select>
 
         <label><b><fmt:message key="period"/></b></label>
-        <select name="period" required>
+        <select name="term" required>
             <option value=""><fmt:message key="select_period"/></option>
             <option value="1"><fmt:message key="once_a_month"/></option>
             <option value="3"><fmt:message key="3_month"/></option>
