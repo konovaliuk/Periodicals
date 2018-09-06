@@ -8,7 +8,7 @@ import java.util.ArrayList;
 /**
  * Created by Julia on 09.08.2018
  */
-public interface IPeriodical {
+public interface IPeriodicalDAO {
 
     /**
      * periodical's selection by id

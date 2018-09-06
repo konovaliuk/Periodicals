@@ -3,7 +3,7 @@ package persistence.dao.mySqlDAOImpl;
 
 import logging.LoggerLoader;
 import org.apache.log4j.Logger;
-import persistence.dao.IUserRole;
+import persistence.dao.IUserRoleDAO;
 import persistence.entities.UserRole;
 
 import java.sql.*;
@@ -11,7 +11,8 @@ import java.sql.*;
 /**
  * Created by Julia on 09.08.2018
  */
-public class UserRoleDAO extends AbstractDAO implements IUserRole {
+public class UserRoleDAO extends AbstractDAO implements IUserRoleDAO {
+    private final Logger logger = LoggerLoader.getLogger(UserRoleDAO.class);
 
     private static UserRoleDAO userRoleDAO;
 
@@ -35,16 +36,21 @@ public class UserRoleDAO extends AbstractDAO implements IUserRole {
 
     @Override
     public UserRole findRoleById(int id) throws SQLException {
-        UserRole role = null;
-        role = findById(SELECT_ALL_FROM_USER_ROLE + "WHERE user_role.id= ?", id,
-                set -> set != null ? new UserRole(
-                        set.getInt("id"),
-                        set.getString("role")) : null);
+        UserRole role;
+        try {
+            role = findById(SELECT_ALL_FROM_USER_ROLE + "WHERE user_role.id= ?", id,
+                    set -> set != null ? new UserRole(
+                            set.getInt("id"),
+                            set.getString("role")) : null);
+        } catch (SQLException e) {
+            logger.error("Failed to find role by id ", e);
+            throw new SQLException();
+        }
         return role;
     }
 
     @Override
-    public UserRole findRoleByRole(String role) throws SQLException {
+    public UserRole findUserRoleByRole(String role) throws SQLException {
         UserRole userRole = null;
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_ALL_FROM_USER_ROLE + "WHERE user_role.role= ?")) {
@@ -55,6 +61,9 @@ public class UserRoleDAO extends AbstractDAO implements IUserRole {
                             resultSet.getString("role"));
                 }
             }
+        } catch (SQLException e) {
+            logger.error("Failed to find user role by role ", e);
+            throw new SQLException();
         }
         return userRole;
     }
@@ -66,6 +75,9 @@ public class UserRoleDAO extends AbstractDAO implements IUserRole {
             statement.setString(1, role.getRole());
             statement.executeUpdate();
             role.setId(getGeneratedKey(statement));
+        } catch (SQLException e) {
+            logger.error("Failed to insert role ", e);
+            throw new SQLException();
         }
     }
 
@@ -75,6 +87,9 @@ public class UserRoleDAO extends AbstractDAO implements IUserRole {
              PreparedStatement statement = connection.prepareStatement(UPDATE_USER_ROLE)) {
             statement.setString(1, role.getRole());
             statement.executeUpdate();
+        } catch (SQLException e) {
+            logger.error("Failed to update role ", e);
+            throw new SQLException();
         }
     }
 
@@ -84,6 +99,9 @@ public class UserRoleDAO extends AbstractDAO implements IUserRole {
              PreparedStatement statement = connection.prepareStatement(DELETE_USER_ROLE)) {
             statement.setInt(1, role.getId());
             statement.executeUpdate();
+        } catch (SQLException e) {
+            logger.error("Failed to delete role ", e);
+            throw new SQLException();
         }
     }
 }

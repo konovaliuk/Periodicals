@@ -19,10 +19,11 @@ public class CommandDeletePeriodical implements ICommand {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
+        PeriodicalService periodicalService =PeriodicalService.getInstance();
         int periodicalId = Integer.valueOf(request.getParameter("periodicalId"));
-        Periodical periodical = PeriodicalService.getPeriodical(periodicalId);
+        Periodical periodical = periodicalService.getPeriodical(periodicalId);
         String title = periodical.getTitle();
-        if (!PeriodicalService.deletePeriodical(periodical)) {
+        if (!periodicalService.deletePeriodical(periodical)) {
             request.setAttribute("info", Info.getInstance().getProperty(Info.ERROR));
             return Config.getInstance().getProperty(Config.PERIODICAL_INFO);
         }

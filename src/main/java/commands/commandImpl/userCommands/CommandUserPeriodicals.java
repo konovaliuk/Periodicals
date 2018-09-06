@@ -18,10 +18,7 @@ public class CommandUserPeriodicals implements ICommand {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         User user = (User) request.getSession().getAttribute("user");
-       /* if (user == null) {
-            return Config.getInstance().getProperty(Config.LOGIN);
-        }*/
-        ArrayList<Periodical> periodicals = SubscriptionService.getUserPeriodicals(user);
+        ArrayList<Periodical> periodicals = SubscriptionService.getInstance().getUserPeriodicals(user);
         request.setAttribute("userPeriodicals", periodicals);
         return Config.getInstance().getProperty(Config.GET_USER_PERIODICALS);
     }

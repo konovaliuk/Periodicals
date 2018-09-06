@@ -2,8 +2,8 @@ package service;
 
 import logging.LoggerLoader;
 import org.apache.log4j.Logger;
-import persistence.dao.IUser;
-import persistence.dao.IUserRole;
+import persistence.dao.IUserDAO;
+import persistence.dao.IUserRoleDAO;
 import persistence.dao.daoFactory.DAOFactory;
 import persistence.dao.daoFactory.MySqlDAOFactory;
 import persistence.entities.User;
@@ -16,10 +16,21 @@ import java.sql.SQLException;
  * Created by Julia on 15.08.2018
  */
 public class UserService {
-    private static final Logger logger = LoggerLoader.getLogger(UserService.class);
-    private static MySqlDAOFactory mySqlDAOFactory = DAOFactory.getMySqlDAOFactory();
+    private final Logger logger = LoggerLoader.getLogger(UserService.class);
+    private static UserService userService;
+    private MySqlDAOFactory mySqlDAOFactory = DAOFactory.getMySqlDAOFactory();
 
-    public static User login(String login, String password) {
+    private UserService() {
+    }
+
+    public static UserService getInstance() {
+        if (userService == null) {
+            userService = new UserService();
+        }
+        return userService;
+    }
+
+    public User login(String login, String password) {
         User user = getUserByLogin(login);
         if (user != null && user.getPassword().equals(password)) {
             return user;
@@ -27,25 +38,26 @@ public class UserService {
         return null;
     }
 
-    public static boolean register(User user) {
-        RegisterManager registerManager = new RegisterManager();
-        return registerManager.register(user);
+    public boolean register(String name, String login, String password) {
+        UserRole userRole = getUserRole("reader");
+        User user = new User(userRole, null, name, login, password);
+        return RegisterManager.getInstance().register(user);
     }
 
-    public static UserRole getUserRole(String role) {
-        IUserRole iUserRole = mySqlDAOFactory.getUserRoleDAO();
+    public UserRole getUserRole(String role) {
+        IUserRoleDAO iUserRoleDAO = mySqlDAOFactory.getUserRoleDAO();
         try {
-            return iUserRole.findRoleByRole(role);
+            return iUserRoleDAO.findUserRoleByRole(role);
         } catch (SQLException e) {
             logger.error("Failed to find userRole by role", e);
             return null;
         }
     }
 
-    public static User getUserByLogin(String login) {
-        IUser iUser = mySqlDAOFactory.getUserDAO();
+    public User getUserByLogin(String login) {
+        IUserDAO iUserDAO = mySqlDAOFactory.getUserDAO();
         try {
-            return iUser.findUserByLogin(login);
+            return iUserDAO.findUserByLogin(login);
         } catch (SQLException e) {
             logger.error("Failed to find user by login", e);
             return null;

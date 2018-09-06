@@ -8,7 +8,7 @@ import java.sql.SQLException;
 /**
  * Created by Julia on 09.08.2018
  */
-public interface IUser {
+public interface IUserDAO {
 
     /**
      * User's selection by id

@@ -11,6 +11,8 @@
 <html>
 <head>
     <title>Create periodical</title>
+    <fmt:setLocale value="${locale}"/>
+    <fmt:setBundle basename="message"/>
 </head>
 <body>
 <jsp:include page="header.jsp"/>
@@ -23,17 +25,17 @@
         <label><b><fmt:message key="type"/></b></label>
         <select name="type" required>
             <option value=""><fmt:message key="select_type"/></option>
-            <option value="newspaper">newspaper</option>
-            <option value="journal">journal</option>
+            <option value="newspaper"><fmt:message key="newspaper"/></option>
+            <option value="journal"><fmt:message key="journal"/></option>
         </select>
 
         <label><b><fmt:message key="period"/></b></label>
         <select name="period" required>
             <option value=""><fmt:message key="select_period"/></option>
-            <option value="once a week">once a week</option>
-            <option value="once a month">once a month</option>
-            <option value="once a 3 month">once a 3 month</option>
-            <option value="once a year">once a year</option>
+            <option value="1"><fmt:message key="once_a_month"/></option>
+            <option value="3"><fmt:message key="3_month"/></option>
+            <option value="6"><fmt:message key="6_month"/></option>
+            <option value="12"><fmt:message key="year"/></option>
         </select>
 
         <label><b><fmt:message key="category"/></b></label>

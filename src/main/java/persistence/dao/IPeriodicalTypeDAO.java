@@ -7,7 +7,7 @@ import java.sql.SQLException;
 /**
  * Created by Julia on 13.08.2018
  */
-public interface IPeriodicalType {
+public interface IPeriodicalTypeDAO {
     /**
      * Type's selection by id
      *
@@ -22,7 +22,7 @@ public interface IPeriodicalType {
      * @param type - type
      * @return - type or null
      */
-    PeriodicalType findTypeByPeriodicalType(String type) throws SQLException;
+    PeriodicalType findPeriodicalTypeByType(String type) throws SQLException;
 
     /**
      * Insert new type

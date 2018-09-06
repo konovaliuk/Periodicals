@@ -2,13 +2,6 @@ package persistence.dao.daoFactory;
 
 import persistence.dao.*;
 import persistence.dao.mySqlDAOImpl.*;
-import persistence.entities.PeriodicalPeriod;
-
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.SQLException;
 
 /**
  * Created by Julia on 09.08.2018
@@ -16,42 +9,42 @@ import java.sql.SQLException;
 public class MySqlDAOFactory extends DAOFactory {
 
     @Override
-    public IAccount getAccountDAO() {
+    public IAccountDAO getAccountDAO() {
         return AccountDAO.getInstance();
     }
 
     @Override
-    public IPayment getPaymentDAO() {
+    public IPaymentDAO getPaymentDAO() {
         return PaymentDAO.getInstance();
     }
 
     @Override
-    public IPeriodical getPeriodicalDAO() {
+    public IPeriodicalDAO getPeriodicalDAO() {
         return PeriodicalDAO.getInstance();
     }
 
     @Override
-    public IPeriodicalPeriod getPeriodicalPeriodDAO() {
+    public IPeriodicalPeriodDAO getPeriodicalPeriodDAO() {
         return PeriodicalPeriodDAO.getInstance();
     }
 
     @Override
-    public IPeriodicalType getPeriodicalTypeDAO() {
+    public IPeriodicalTypeDAO getPeriodicalTypeDAO() {
         return PeriodicalTypeDAO.getInstance();
     }
 
     @Override
-    public ISubscription getSubscriptionDAO() {
+    public ISubscriptionDAO getSubscriptionDAO() {
         return SubscriptionDAO.getInstance();
     }
 
     @Override
-    public IUser getUserDAO() {
+    public IUserDAO getUserDAO() {
         return UserDAO.getInstance();
     }
 
     @Override
-    public IUserRole getUserRoleDAO() {
+    public IUserRoleDAO getUserRoleDAO() {
         return UserRoleDAO.getInstance();
     }
 }

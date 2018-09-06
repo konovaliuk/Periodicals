@@ -9,7 +9,7 @@ import java.util.ArrayList;
 /**
  * Created by Julia on 09.08.2018
  */
-public interface ISubscription {
+public interface ISubscriptionDAO {
 
     /**
      * subscription's selection by id
@@ -40,7 +40,7 @@ public interface ISubscription {
      *
      * @return - list of subscriptions
      */
-    ArrayList<Subscription> getAllSubscription() throws SQLException;
+    ArrayList<Subscription> findAllSubscription() throws SQLException;
 
     /**
      * Insert new subscription

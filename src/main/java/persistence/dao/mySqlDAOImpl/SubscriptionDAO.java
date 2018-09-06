@@ -2,7 +2,7 @@ package persistence.dao.mySqlDAOImpl;
 
 import logging.LoggerLoader;
 import org.apache.log4j.Logger;
-import persistence.dao.ISubscription;
+import persistence.dao.ISubscriptionDAO;
 import persistence.dao.daoFactory.DAOFactory;
 import persistence.dao.daoFactory.MySqlDAOFactory;
 import persistence.entities.Subscription;
@@ -13,7 +13,8 @@ import java.util.ArrayList;
 /**
  * Created by Julia on 09.08.2018
  */
-public class SubscriptionDAO extends AbstractDAO implements ISubscription {
+public class SubscriptionDAO extends AbstractDAO implements ISubscriptionDAO {
+    private final Logger logger = LoggerLoader.getLogger(SubscriptionDAO.class);
 
     private DAOFactory daoFactory = new MySqlDAOFactory();
 
@@ -44,13 +45,18 @@ public class SubscriptionDAO extends AbstractDAO implements ISubscription {
     @Override
     public Subscription findSubscriptionById(int id) throws SQLException {
         Subscription subscription;
-        subscription = findById(SELECT_ALL_FROM_SUBSCRIPTION + "WHERE subscription.id = ?", id,
-                set -> set != null ? new Subscription(
-                        set.getInt("id"),
-                        daoFactory.getUserDAO().findUserById(set.getInt("user_id")),
-                        daoFactory.getPeriodicalDAO().findPeriodicalById(set.getInt("periodical_id")),
-                        daoFactory.getPaymentDAO().findPaymentById(set.getInt("payment_id")),
-                        set.getTimestamp("expiration_date")) : null);
+        try {
+            subscription = findById(SELECT_ALL_FROM_SUBSCRIPTION + "WHERE subscription.id = ?", id,
+                    set -> set != null ? new Subscription(
+                            set.getInt("id"),
+                            daoFactory.getUserDAO().findUserById(set.getInt("user_id")),
+                            daoFactory.getPeriodicalDAO().findPeriodicalById(set.getInt("periodical_id")),
+                            daoFactory.getPaymentDAO().findPaymentById(set.getInt("payment_id")),
+                            set.getTimestamp("expiration_date")) : null);
+        } catch (SQLException e) {
+            logger.error("Failed to find subscription by id ", e);
+            throw new SQLException();
+        }
         return subscription;
     }
 
@@ -70,6 +76,9 @@ public class SubscriptionDAO extends AbstractDAO implements ISubscription {
                     subscriptions.add(subscription);
                 }
             }
+        } catch (SQLException e) {
+            logger.error("Failed to find subscriptions by user ", e);
+            throw new SQLException();
         }
         return subscriptions;
     }
@@ -90,12 +99,15 @@ public class SubscriptionDAO extends AbstractDAO implements ISubscription {
                     subscriptions.add(subscription);
                 }
             }
+        } catch (SQLException e) {
+            logger.error("Failed to find subscriptions by periodical ", e);
+            throw new SQLException();
         }
         return subscriptions;
     }
 
     @Override
-    public ArrayList<Subscription> getAllSubscription() throws SQLException {
+    public ArrayList<Subscription> findAllSubscription() throws SQLException {
         ArrayList<Subscription> subscriptions = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
@@ -109,19 +121,26 @@ public class SubscriptionDAO extends AbstractDAO implements ISubscription {
                     subscriptions.add(subscription);
                 }
             }
+        } catch (SQLException e) {
+            logger.error("Failed to fins all subscriptions", e);
+            throw new SQLException();
         }
         return subscriptions;
     }
 
     @Override
     public void insertSubscription(Subscription subscription, Connection connection) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement(INSERT_SUBSCRIPTION, Statement.RETURN_GENERATED_KEYS);
-        statement.setInt(1, subscription.getUser().getId());
-        statement.setInt(2, subscription.getPeriodical().getId());
-        statement.setInt(3, subscription.getPayment().getId());
-        statement.setTimestamp(4, subscription.getExpirationDate());
-        statement.executeUpdate();
-        subscription.setId(getGeneratedKey(statement));
+        try (PreparedStatement statement = connection.prepareStatement(INSERT_SUBSCRIPTION, Statement.RETURN_GENERATED_KEYS)) {
+            statement.setInt(1, subscription.getUser().getId());
+            statement.setInt(2, subscription.getPeriodical().getId());
+            statement.setInt(3, subscription.getPayment().getId());
+            statement.setTimestamp(4, subscription.getExpirationDate());
+            statement.executeUpdate();
+            subscription.setId(getGeneratedKey(statement));
+        } catch (SQLException e) {
+            logger.error("Failed to insert subscription ", e);
+            throw new SQLException();
+        }
     }
 
     @Override
@@ -133,6 +152,9 @@ public class SubscriptionDAO extends AbstractDAO implements ISubscription {
             statement.setInt(3, subscription.getPayment().getId());
             statement.setTimestamp(4, subscription.getExpirationDate());
             statement.executeUpdate();
+        } catch (SQLException e) {
+            logger.error("Failed to update subscription ", e);
+            throw new SQLException();
         }
     }
 
@@ -142,6 +164,9 @@ public class SubscriptionDAO extends AbstractDAO implements ISubscription {
              PreparedStatement statement = connection.prepareStatement(DELETE_SUBSCRIPTION)) {
             statement.setInt(1, subscription.getId());
             statement.executeUpdate();
+        } catch (SQLException e) {
+            logger.error("Failed to delete subscription ", e);
+            throw new SQLException();
         }
     }
 

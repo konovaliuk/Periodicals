@@ -1,9 +1,8 @@
 package service;
 
 import logging.LoggerLoader;
-import manager.Config;
 import org.apache.log4j.Logger;
-import persistence.dao.ISubscription;
+import persistence.dao.ISubscriptionDAO;
 import persistence.dao.daoFactory.DAOFactory;
 import persistence.dao.daoFactory.MySqlDAOFactory;
 import persistence.entities.Payment;
@@ -22,23 +21,34 @@ import java.util.Calendar;
  * Created by Julia on 15.08.2018
  */
 public class SubscriptionService {
-    private static final Logger logger = LoggerLoader.getLogger(SubscriptionService.class);
-    private static MySqlDAOFactory mySqlDAOFactory = DAOFactory.getMySqlDAOFactory();
-    private static SubscribeManager subscribeManager = new SubscribeManager();
+    private final Logger logger = LoggerLoader.getLogger(SubscriptionService.class);
+    private static SubscriptionService subscriptionService;
+    private MySqlDAOFactory mySqlDAOFactory = DAOFactory.getMySqlDAOFactory();
 
-    public static boolean subscribe(User user, Periodical periodical, BigDecimal totalAmount, int term) {
+
+    private SubscriptionService() {
+    }
+
+    public static SubscriptionService getInstance() {
+        if (subscriptionService == null) {
+            subscriptionService = new SubscriptionService();
+        }
+        return subscriptionService;
+    }
+
+    public boolean subscribe(User user, Periodical periodical, BigDecimal totalAmount, int term) {
         user.getAccount().setAmount(user.getAccount().getAmount().subtract(totalAmount));
         Payment payment = new Payment(new Timestamp(System.currentTimeMillis()), totalAmount);
         Timestamp expirationDate = getExpirationDate(payment.getDate(), term);
         Subscription subscription = new Subscription(user, periodical, payment, expirationDate);
-        return subscribeManager.subscribe(subscription);
+         return SubscribeManager.getInstance().subscribe(subscription);
     }
 
-    public static ArrayList<Periodical> getUserPeriodicals(User user) {
-        ISubscription iSubscription = mySqlDAOFactory.getSubscriptionDAO();
+    public ArrayList<Periodical> getUserPeriodicals(User user) {
+        ISubscriptionDAO iSubscriptionDAO = mySqlDAOFactory.getSubscriptionDAO();
         ArrayList<Subscription> subscriptions;
         try {
-            subscriptions = iSubscription.findSubscriptionsByUser(user.getId());
+            subscriptions = iSubscriptionDAO.findSubscriptionsByUser(user.getId());
         } catch (SQLException e) {
             logger.error("Failed to find subscriptions by user", e);
             return null;
@@ -50,30 +60,30 @@ public class SubscriptionService {
         return periodicals;
     }
 
-    public static ArrayList<Subscription> getSubscriptionsByPeriodical(Periodical periodical) {
-        ISubscription iSubscription = mySqlDAOFactory.getSubscriptionDAO();
+    public ArrayList<Subscription> getSubscriptionsByPeriodical(Periodical periodical) {
+        ISubscriptionDAO iSubscriptionDAO = mySqlDAOFactory.getSubscriptionDAO();
         try {
-            return iSubscription.findSubscriptionsByPeriodical(periodical.getId());
+            return iSubscriptionDAO.findSubscriptionsByPeriodical(periodical.getId());
         } catch (SQLException e) {
             logger.error("Failed to find subscriptions by periodical", e);
             return null;
         }
     }
 
-    public static ArrayList<Subscription> getAllSubscriptions() {
-        ISubscription iSubscription = mySqlDAOFactory.getSubscriptionDAO();
+    public ArrayList<Subscription> getAllSubscriptions() {
+        ISubscriptionDAO iSubscriptionDAO = mySqlDAOFactory.getSubscriptionDAO();
         try {
-            return iSubscription.getAllSubscription();
+            return iSubscriptionDAO.findAllSubscription();
         } catch (SQLException e) {
             logger.error("Failed to get all subscriptions ", e);
             return null;
         }
     }
 
-    public static boolean deleteSubscription(Subscription subscription) {
-        ISubscription iSubscription = mySqlDAOFactory.getSubscriptionDAO();
+    public boolean deleteSubscription(Subscription subscription) {
+        ISubscriptionDAO iSubscriptionDAO = mySqlDAOFactory.getSubscriptionDAO();
         try {
-            iSubscription.deleteSubscription(subscription);
+            iSubscriptionDAO.deleteSubscription(subscription);
             return true;
         } catch (SQLException e) {
             logger.error("Failed to delete subscription ", e);
@@ -81,7 +91,7 @@ public class SubscriptionService {
         }
     }
 
-    public static boolean checkSubscription(User user, Periodical periodical) {
+    public boolean checkSubscription(User user, Periodical periodical) {
         ArrayList<Periodical> periodicals = getUserPeriodicals(user);
         if (periodicals != null) {
             for (Periodical tempPeriodical : periodicals) {
@@ -93,7 +103,7 @@ public class SubscriptionService {
         return false;
     }
 
-    private static Timestamp getExpirationDate(Timestamp subscriptionDate, int term) {
+    private Timestamp getExpirationDate(Timestamp subscriptionDate, int term) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(subscriptionDate);
         calendar.add(Calendar.MONTH, term);

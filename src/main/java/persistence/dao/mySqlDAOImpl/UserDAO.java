@@ -1,7 +1,9 @@
 package persistence.dao.mySqlDAOImpl;
 
 
-import persistence.dao.IUser;
+import logging.LoggerLoader;
+import org.apache.log4j.Logger;
+import persistence.dao.IUserDAO;
 import persistence.entities.Account;
 import persistence.entities.User;
 import persistence.entities.UserRole;
@@ -11,7 +13,8 @@ import java.sql.*;
 /**
  * Created by Julia on 09.08.2018
  */
-public class UserDAO extends AbstractDAO implements IUser {
+public class UserDAO extends AbstractDAO implements IUserDAO {
+    private final Logger logger = LoggerLoader.getLogger(UserDAO.class);
 
     private static UserDAO userDAO;
 
@@ -39,20 +42,18 @@ public class UserDAO extends AbstractDAO implements IUser {
 
     @Override
     public User findUserById(int id) throws SQLException {
-        User user = null;
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SELECT_ALL_FROM_USER + "WHERE user.id= ?")) {
-            statement.setInt(1, id);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                while (resultSet.next()) {
-                    user = new User(resultSet.getInt("id"),
-                            new UserRole(resultSet.getInt("user_role"), resultSet.getString("role")),
-                            new Account(resultSet.getInt("id"), resultSet.getBigDecimal("amount")),
-                            resultSet.getString("name"),
-                            resultSet.getString("login"),
-                            resultSet.getString("password"));
-                }
-            }
+        User user;
+        try {
+            user = findById(SELECT_ALL_FROM_USER + "WHERE user.id= ?", id,
+                    set -> set != null ? new User(set.getInt("id"),
+                            new UserRole(set.getInt("user_role"), set.getString("role")),
+                            new Account(set.getInt("id"), set.getBigDecimal("amount")),
+                            set.getString("name"),
+                            set.getString("login"),
+                            set.getString("password")) : null);
+        } catch (SQLException e) {
+            logger.error("Failed to find user by id ", e);
+            throw new SQLException();
         }
         return user;
     }
@@ -73,6 +74,9 @@ public class UserDAO extends AbstractDAO implements IUser {
                             resultSet.getString("password"));
                 }
             }
+        } catch (SQLException e) {
+            logger.error("Failed to find user by login ", e);
+            throw new SQLException();
         }
         return user;
     }
@@ -86,6 +90,9 @@ public class UserDAO extends AbstractDAO implements IUser {
             statement.setString(4, user.getPassword());
             statement.executeUpdate();
             user.setId(getGeneratedKey(statement));
+        } catch (SQLException e) {
+            logger.error("Failed to insert user ", e);
+            throw new SQLException();
         }
     }
 
@@ -99,6 +106,9 @@ public class UserDAO extends AbstractDAO implements IUser {
             statement.setString(4, user.getPassword());
             statement.setInt(5, user.getId());
             statement.executeUpdate();
+        } catch (SQLException e) {
+            logger.error("Failed to update user ", e);
+            throw new SQLException();
         }
     }
 
@@ -108,6 +118,9 @@ public class UserDAO extends AbstractDAO implements IUser {
              PreparedStatement statement = connection.prepareStatement(DELETE_USER)) {
             statement.setInt(1, user.getId());
             statement.executeUpdate();
+        } catch (SQLException e) {
+            logger.error("Failed to delete user ", e);
+            throw new SQLException();
         }
     }
 }

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 /**
  * Created by Julia on 28.08.2018
  */
-public interface IAccount {
+public interface IAccountDAO {
     /**
      * Account's selection by id
      *

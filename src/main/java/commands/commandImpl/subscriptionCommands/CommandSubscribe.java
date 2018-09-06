@@ -29,7 +29,7 @@ public class CommandSubscribe implements ICommand {
         }*/
         User user = (User) request.getSession().getAttribute("user");
         int periodicalId = Integer.valueOf(request.getParameter("periodicalId"));
-        Periodical periodical = PeriodicalService.getPeriodical(periodicalId);
+        Periodical periodical = PeriodicalService.getInstance().getPeriodical(periodicalId);
         int term = Integer.valueOf(request.getParameter("term"));
         BigDecimal totalAmount;
         if (term != 0) {
@@ -42,7 +42,7 @@ public class CommandSubscribe implements ICommand {
             request.setAttribute("info", Info.getInstance().getProperty(Info.YOU_DONT_HAVE_ENOUGH_MONEY));
             return Config.getInstance().getProperty(Config.PERIODICAL_INFO);
         }
-        if (!SubscriptionService.subscribe(user, periodical, totalAmount, term)) {
+        if (!SubscriptionService.getInstance().subscribe(user, periodical, totalAmount, term)) {
             request.setAttribute("info", Info.getInstance().getProperty(Info.ERROR));
             return Config.getInstance().getProperty(Config.PERIODICAL_INFO);
         }

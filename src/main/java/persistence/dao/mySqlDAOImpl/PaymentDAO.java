@@ -2,7 +2,7 @@ package persistence.dao.mySqlDAOImpl;
 
 import logging.LoggerLoader;
 import org.apache.log4j.Logger;
-import persistence.dao.IPayment;
+import persistence.dao.IPaymentDAO;
 import persistence.entities.Payment;
 
 import java.sql.*;
@@ -11,7 +11,8 @@ import java.util.ArrayList;
 /**
  * Created by Julia on 14.08.2018
  */
-public class PaymentDAO extends AbstractDAO implements IPayment {
+public class PaymentDAO extends AbstractDAO implements IPaymentDAO {
+    private final Logger logger = LoggerLoader.getLogger(PaymentDAO.class);
 
     private static PaymentDAO paymentDAO;
 
@@ -38,11 +39,16 @@ public class PaymentDAO extends AbstractDAO implements IPayment {
     @Override
     public Payment findPaymentById(int id) throws SQLException {
         Payment payment;
-        payment = findById(SELECT_ALL_FROM_PAYMENT + " WHERE payment.id = ?", id,
-                set -> set != null ? new Payment(
-                        set.getInt("id"),
-                        set.getTimestamp("date"),
-                        set.getBigDecimal("amount")) : null);
+        try {
+            payment = findById(SELECT_ALL_FROM_PAYMENT + " WHERE payment.id = ?", id,
+                    set -> set != null ? new Payment(
+                            set.getInt("id"),
+                            set.getTimestamp("date"),
+                            set.getBigDecimal("amount")) : null);
+        } catch (SQLException e) {
+            logger.error("Failed to find payment by id ", e);
+            throw new SQLException();
+        }
         return payment;
     }
 
@@ -59,17 +65,24 @@ public class PaymentDAO extends AbstractDAO implements IPayment {
                     payments.add(payment);
                 }
             }
+        } catch (SQLException e) {
+            logger.error("Failed to find all payments ", e);
+            throw new SQLException();
         }
         return payments;
     }
 
     @Override
     public void insertPayment(Payment payment, Connection connection) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement(INSERT_PAYMENT, Statement.RETURN_GENERATED_KEYS);
-        statement.setTimestamp(1, payment.getDate());
-        statement.setBigDecimal(2, payment.getAmount());
-        statement.executeUpdate();
-        payment.setId(getGeneratedKey(statement));
+        try (PreparedStatement statement = connection.prepareStatement(INSERT_PAYMENT, Statement.RETURN_GENERATED_KEYS)) {
+            statement.setTimestamp(1, payment.getDate());
+            statement.setBigDecimal(2, payment.getAmount());
+            statement.executeUpdate();
+            payment.setId(getGeneratedKey(statement));
+        } catch (SQLException e) {
+            logger.error("Failed to insert payment ", e);
+            throw new SQLException();
+        }
     }
 
     @Override
@@ -79,6 +92,9 @@ public class PaymentDAO extends AbstractDAO implements IPayment {
             statement.setTimestamp(1, payment.getDate());
             statement.setBigDecimal(2, payment.getAmount());
             statement.executeUpdate();
+        } catch (SQLException e) {
+            logger.error("Failed to update payment ", e);
+            throw new SQLException();
         }
     }
 
@@ -88,6 +104,9 @@ public class PaymentDAO extends AbstractDAO implements IPayment {
              PreparedStatement statement = connection.prepareStatement(DELETE_PAYMENT)) {
             statement.setInt(1, payment.getId());
             statement.executeUpdate();
+        } catch (SQLException e) {
+            logger.error("Failed to delete payment ", e);
+            throw new SQLException();
         }
     }
 }

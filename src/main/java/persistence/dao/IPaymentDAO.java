@@ -9,7 +9,7 @@ import java.util.ArrayList;
 /**
  * Created by Julia on 14.08.2018
  */
-public interface IPayment {
+public interface IPaymentDAO {
 
     /**
      * Payment's selection by id

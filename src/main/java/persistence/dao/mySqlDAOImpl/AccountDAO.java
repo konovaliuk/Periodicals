@@ -1,6 +1,8 @@
 package persistence.dao.mySqlDAOImpl;
 
-import persistence.dao.IAccount;
+import logging.LoggerLoader;
+import org.apache.log4j.Logger;
+import persistence.dao.IAccountDAO;
 import persistence.entities.Account;
 
 import java.sql.*;
@@ -9,7 +11,8 @@ import java.util.ArrayList;
 /**
  * Created by Julia on 28.08.2018
  */
-public class AccountDAO extends AbstractDAO implements IAccount {
+public class AccountDAO extends AbstractDAO implements IAccountDAO {
+    private final Logger logger = LoggerLoader.getLogger(AccountDAO.class);
 
     private static AccountDAO accountDAO;
 
@@ -36,10 +39,15 @@ public class AccountDAO extends AbstractDAO implements IAccount {
     @Override
     public Account findAccountById(int id) throws SQLException {
         Account account;
-        account = findById(SELECT_ALL_FROM_ACCOUNT + " WHERE account.id = ?", id,
-                set -> set != null ? new Account(
-                        set.getInt("id"),
-                        set.getBigDecimal("amount")) : null);
+        try {
+            account = findById(SELECT_ALL_FROM_ACCOUNT + " WHERE account.id = ?", id,
+                    set -> set != null ? new Account(
+                            set.getInt("id"),
+                            set.getBigDecimal("amount")) : null);
+        } catch (SQLException e) {
+            logger.error("Failed to find account by id", e);
+            throw new SQLException();
+        }
         return account;
     }
 
@@ -55,6 +63,9 @@ public class AccountDAO extends AbstractDAO implements IAccount {
                     accounts.add(account);
                 }
             }
+        } catch (SQLException e) {
+            logger.error("Failed to find all accounts ", e);
+            throw new SQLException();
         }
         return accounts;
     }
@@ -65,15 +76,22 @@ public class AccountDAO extends AbstractDAO implements IAccount {
             statement.setInt(1, account.getId());
             statement.setBigDecimal(2, account.getAmount());
             statement.executeUpdate();
+        } catch (SQLException e) {
+            logger.error("Failed to insert account ", e);
+            throw new SQLException();
         }
     }
 
     @Override
     public void updateAccount(Account account, Connection connection) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement(UPDATE_ACCOUNT);
-        statement.setBigDecimal(1, account.getAmount());
-        statement.setInt(2, account.getId());
-        statement.executeUpdate();
+        try (PreparedStatement statement = connection.prepareStatement(UPDATE_ACCOUNT)) {
+            statement.setBigDecimal(1, account.getAmount());
+            statement.setInt(2, account.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            logger.error("Failed to update account ", e);
+            throw new SQLException();
+        }
     }
 
     @Override
@@ -82,6 +100,9 @@ public class AccountDAO extends AbstractDAO implements IAccount {
              PreparedStatement statement = connection.prepareStatement(DELETE_ACCOUNT)) {
             statement.setInt(1, account.getId());
             statement.executeUpdate();
+        } catch (SQLException e) {
+            logger.error("Failed to delete account", e);
+            throw new SQLException();
         }
     }
 }

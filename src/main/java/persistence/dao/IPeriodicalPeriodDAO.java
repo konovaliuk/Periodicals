@@ -8,7 +8,7 @@ import java.util.ArrayList;
 /**
  * Created by Julia on 27.08.2018
  */
-public interface IPeriodicalPeriod {
+public interface IPeriodicalPeriodDAO {
     /**
      * Period's selection by id
      *
@@ -23,14 +23,14 @@ public interface IPeriodicalPeriod {
      * @param type - period
      * @return - period or null
      */
-    PeriodicalPeriod findPeriodByPeriodicalPeriod(String type) throws SQLException;
+    PeriodicalPeriod findPeriodicalPeriodByPeriod(String type) throws SQLException;
 
     /**
      * Selection all period in the database
      *
      * @return - list of period
      */
-    ArrayList<PeriodicalPeriod> getAllPeriods() throws SQLException;
+    ArrayList<PeriodicalPeriod> findAllPeriods() throws SQLException;
 
     /**
      * Insert new period

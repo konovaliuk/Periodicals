@@ -2,9 +2,6 @@ package persistence.dao.daoFactory;
 
 import persistence.dao.*;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
 /**
  * Created by Julia on 09.08.2018
  */
@@ -14,19 +11,19 @@ public abstract class DAOFactory {
         return new MySqlDAOFactory();
     }
 
-    public abstract IAccount getAccountDAO();
+    public abstract IAccountDAO getAccountDAO();
 
-    public abstract IPayment getPaymentDAO();
+    public abstract IPaymentDAO getPaymentDAO();
 
-    public abstract IPeriodical getPeriodicalDAO();
+    public abstract IPeriodicalDAO getPeriodicalDAO();
 
-    public abstract IPeriodicalPeriod getPeriodicalPeriodDAO();
+    public abstract IPeriodicalPeriodDAO getPeriodicalPeriodDAO();
 
-    public abstract IPeriodicalType getPeriodicalTypeDAO();
+    public abstract IPeriodicalTypeDAO getPeriodicalTypeDAO();
 
-    public abstract ISubscription getSubscriptionDAO();
+    public abstract ISubscriptionDAO getSubscriptionDAO();
 
-    public abstract IUser getUserDAO();
+    public abstract IUserDAO getUserDAO();
 
-    public abstract IUserRole getUserRoleDAO();
+    public abstract IUserRoleDAO getUserRoleDAO();
 }

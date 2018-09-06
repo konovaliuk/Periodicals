@@ -20,9 +20,10 @@ public class CommandRegister implements ICommand {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
+        UserService userService = UserService.getInstance();
         String name = request.getParameter("name");
         String login = request.getParameter("login");
-        String password = request.getParameter( "password");
+        String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmPassword");
 
         if (!password.equals(confirmPassword)) {
@@ -30,18 +31,16 @@ public class CommandRegister implements ICommand {
             return Config.getInstance().getProperty(Config.REGISTRATION);
         }
 
-        if (UserService.getUserByLogin(login) != null) {
+        if (userService.getUserByLogin(login) != null) {
             request.setAttribute("error", Info.getInstance().getProperty(Info.INCORRECT_LOGIN));
             return Config.getInstance().getProperty(Config.REGISTRATION);
         }
 
-        UserRole userRole = UserService.getUserRole("reader");
-        User user = new User(userRole, null, name, login, password);
-        if (!UserService.register(user)) {
+        if (!userService.register(name, login, password)) {
             request.setAttribute("error", Info.getInstance().getProperty(Info.LOGIN_ERROR));
             return Config.getInstance().getProperty(Config.REGISTRATION);
         }
-
+        User user = userService.getUserByLogin(login);
         request.getSession().setAttribute("user", user);
         logger.info("Sign up new user " + user.getLogin());
         return Config.getInstance().getProperty(Config.HOME);

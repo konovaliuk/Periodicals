@@ -15,7 +15,7 @@ public class CatalogTag extends TagSupport {
     public int doStartTag() {
         ServletRequest request = pageContext.getRequest();
 
-        PeriodicalService periodicalService = new PeriodicalService();
+        PeriodicalService periodicalService = PeriodicalService.getInstance();
         ArrayList<Periodical> periodicals = periodicalService.getAllPeriodicals(1, 3);
         request.setAttribute("periodicals", periodicals);
 

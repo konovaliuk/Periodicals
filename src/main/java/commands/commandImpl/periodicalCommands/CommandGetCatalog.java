@@ -15,14 +15,15 @@ import java.util.ArrayList;
 public class CommandGetCatalog implements ICommand {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
+        PeriodicalService periodicalService =PeriodicalService.getInstance();
 
         int currentPage = Integer.valueOf(request.getParameter("currentPage"));
         int recordsPerPage = Integer.valueOf(request.getParameter("recordsPerPage"));
 
-        ArrayList<Periodical> periodicals = PeriodicalService.getAllPeriodicals(currentPage, recordsPerPage);
+        ArrayList<Periodical> periodicals = periodicalService.getAllPeriodicals(currentPage, recordsPerPage);
         request.setAttribute("periodicals", periodicals);
 
-        int rows = PeriodicalService.getNumberOfRows();
+        int rows = periodicalService.getNumberOfRows();
         int nOfPages = (int) Math.ceil((double) rows / (double) recordsPerPage);
 
         request.setAttribute("numberOfPages", nOfPages);

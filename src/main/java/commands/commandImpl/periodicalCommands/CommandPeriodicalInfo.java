@@ -17,13 +17,14 @@ public class CommandPeriodicalInfo implements ICommand {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
+
         String id = request.getParameter("periodicalId");
-        Periodical periodical = PeriodicalService.getPeriodical(Integer.valueOf(id));
+        Periodical periodical = PeriodicalService.getInstance().getPeriodical(Integer.valueOf(id));
         request.getSession().setAttribute("periodical", periodical);
         User user = (User) request.getSession().getAttribute("user");
         if (user != null) {
             if (user.getUserRole().getRole().equals("reader")) {
-                if (SubscriptionService.checkSubscription(user, periodical)) {
+                if (SubscriptionService.getInstance().checkSubscription(user, periodical)) {
                     request.setAttribute("isSubscribe", "true");
                     return Config.getInstance().getProperty(Config.PERIODICAL_INFO);
                 }

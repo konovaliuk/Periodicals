@@ -22,7 +22,7 @@ public class CommandLogin implements ICommand {
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         String login = request.getParameter("login");
         String password = request.getParameter("password");
-        User user = UserService.login(login, password);
+        User user = UserService.getInstance().login(login, password);
         if (user == null) {
             request.setAttribute("error", Info.getInstance().getProperty(Info.LOGIN_ERROR));
             return Config.getInstance().getProperty(Config.LOGIN);

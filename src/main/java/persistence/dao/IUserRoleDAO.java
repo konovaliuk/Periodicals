@@ -7,7 +7,7 @@ import java.sql.SQLException;
 /**
  * Created by Julia on 09.08.2018
  */
-public interface IUserRole {
+public interface IUserRoleDAO {
 
     /**
      * Role's selection by id
@@ -23,7 +23,7 @@ public interface IUserRole {
      * @param role - userRole's role
      * @return - UserRole or null
      */
-    UserRole findRoleByRole(String role) throws SQLException;
+    UserRole findUserRoleByRole(String role) throws SQLException;
 
     /**
      * Insert new role

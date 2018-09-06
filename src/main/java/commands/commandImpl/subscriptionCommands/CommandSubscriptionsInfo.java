@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class CommandSubscriptionsInfo implements ICommand {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        ArrayList<Subscription> subscriptions = SubscriptionService.getAllSubscriptions();
+        ArrayList<Subscription> subscriptions = SubscriptionService.getInstance().getAllSubscriptions();
         request.setAttribute("subscriptions", subscriptions);
         return Config.getInstance().getProperty(Config.INFO);
     }

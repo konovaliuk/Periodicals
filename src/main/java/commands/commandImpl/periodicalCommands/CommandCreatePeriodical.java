@@ -31,7 +31,7 @@ public class CommandCreatePeriodical implements ICommand {
         BigDecimal price = new BigDecimal(request.getParameter("price"));
         String description = request.getParameter("description");
 
-        if (!PeriodicalService.createPeriodical(title, type, period, category, price, description)) {
+        if (!PeriodicalService.getInstance().createPeriodical(title, type, period, category, price, description)) {
             request.setAttribute("info", Info.getInstance().getProperty(Info.INCORRECT_DATA_TRY_AGAIN));
             return Config.getInstance().getProperty(Config.CREATE_PERIODICAL);
         }

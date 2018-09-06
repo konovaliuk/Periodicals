@@ -24,17 +24,16 @@
         <label><b><fmt:message key="type"/></b></label>
         <select name="type">
             <option selected>${periodical.getPeriodicalType().getType()}</option>
-            <option value="newspaper">newspaper</option>
-            <option value="journal">journal</option>
+            <option value="newspaper"><fmt:message key="newspaper"/></option>
+            <option value="journal"><fmt:message key="journal"/></option>
         </select>
 
         <label><b><fmt:message key="period"/></b></label>
         <select name="period">
-            <%--<option disabled>Select period</option>--%>
             <option selected>${periodical.getPeriodicalPeriod().getPeriod()}</option>
             <option value="once a month"><fmt:message key="once_a_month"/></option>
             <option value="once a 3 month"><fmt:message key="3_month"/></option>
-            <option value="once a 6 month"><fmt:message key="once_a_month"/></option>
+            <option value="once a 6 month"><fmt:message key="6_month"/></option>
             <option value="once a year"><fmt:message key="year"/></option>
         </select>
 
