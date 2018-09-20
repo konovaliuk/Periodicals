@@ -1,18 +1,36 @@
-> Вариант 19. Система Периодические издания
+> ## System of Periodicals 
 
-Администратор осуществляет ведение каталога периодических Изданий. 
-Читатель может оформить Подписку, предварительно выбрав периодические Издания из списка. 
-Система подсчитывает сумму для оплаты и регистрирует Платеж.
+### Description
 
-Installation guide:
+**Administrator** maintains a catalog of **periodicals**.<br />
+The **reader** can **subscribe** by pre-selecting the **periodicals** from the catalog.<br />
+The system calculates the amount for payment and registers the **payment**.
 
-Clone, fork or download the source code from this Github page
+------------------
 
-Install Maven
+### Technologies
+* JSP + JSTL
+* Servlets
+* JDBC
+* Log4J
+* JUnit
+* Mockito
+------------------
 
-Install Mysql-server
+### Software requirements
+* jdk 1.8.0_181
+* Apache Tomcat 9.0.10
+* MySQL Server 8.0
+------------------
 
-Run Tomcat9 from Maven
+### Installation
+* Clone, fork or download the source code from this Github page
+* Create database from file: \src\main\resources\periodicals.sql
+* Run mvn clean install
+* Copy Periodicals.war from target folder and paste it to the /TOMCAT/webapps folder.
+------------------
 
-Connect to the application at http://localhost:8080/
+### Launch
+* Run Tomcat server using script /TOMCAT/bin/startup.bat
+* Connect to the application at http://localhost:8080/
 
